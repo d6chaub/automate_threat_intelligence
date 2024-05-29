@@ -1,5 +1,6 @@
-# sample-customer-scripts
-
+# Threat Intelligence Automation
 ## Purpose
 
-This repository serves as a library of scripts requested by customers. Each script is meant to be self-contained (with minimial dependencies) to provide a blueprint/example for customers to get started with their custom integrations.
+The initial repository is offered by feedly as a way to make custom feedly integrations via API.
+
+The goal of the threat intelligence automation project is to make an application that summarizes, contextualizes, and ranks security threat information from feedly. It will also write threats to azure devops as actionable items.
