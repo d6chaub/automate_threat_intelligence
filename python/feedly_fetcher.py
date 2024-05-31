@@ -5,6 +5,7 @@ import csv
 import json
 import pymysql
 import configparser
+import os
 
 
 
@@ -69,6 +70,8 @@ class FeedlyFetcher:
 
         flattened_articles = (flatten_json(article, max_depth=max_depth) for article in article_list)
         fieldnames = columns if columns else sorted(list(set().union(*(article.keys() for article in flattened_articles))))
+
+        os.makedirs('data', exist_ok=True)
 
         with open(f'data/{output_filename}.csv', 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
