@@ -62,7 +62,7 @@ class FeedlyFetcher:
 
         return all_articles
 
-    def save_to_csv(self, article_list, max_depth, columns):
+    def save_to_csv(self, article_list, output_filename, max_depth, columns):
         if not article_list:
             print('No articles were fetched or processed. Exiting.')
             sys.exit(0)
@@ -70,7 +70,7 @@ class FeedlyFetcher:
         flattened_articles = (flatten_json(article, max_depth=max_depth) for article in article_list)
         fieldnames = columns if columns else sorted(list(set().union(*(article.keys() for article in flattened_articles))))
 
-        with open('article_data.csv', 'w', newline='', encoding='utf-8') as csvfile:
+        with open(f'data/{output_filename}.csv', 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
             writer.writeheader()
             for article in flattened_articles:
@@ -129,8 +129,9 @@ class FeedlyFetcher:
 
 
 def main():
+    
     config = configparser.ConfigParser()
-    config.read('config.ini')
+    config.read('config/local/config.ini')
 
     feedly_config = config['Feedly']
     mysql_config = config['MySQL']
@@ -141,6 +142,7 @@ def main():
     fetch_all = feedly_config.getboolean('fetch_all', fallback=False)
     hours_ago = feedly_config.getint('hours_ago', fallback=None)
     output_format = feedly_config.get('output_format', fallback='csv')
+    output_filename = feedly_config.get('output_filename', fallback='')
     max_depth = feedly_config.getint('max_depth', fallback=3)
     columns = [column.strip() for column in feedly_config.get('columns', fallback='').split(',')]
 
@@ -154,7 +156,7 @@ def main():
     all_articles = fetcher.fetch_articles(fetch_all=fetch_all, last_timestamp=last_timestamp)
 
     if output_format == 'csv':
-        fetcher.save_to_csv(all_articles, max_depth, columns)
+        fetcher.save_to_csv(all_articles, output_filename, max_depth, columns)
     elif output_format == 'json':
         fetcher.save_to_json(all_articles)
     elif output_format == 'sql':
