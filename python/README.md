@@ -31,31 +31,14 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-3. Set up your MySQL server (if you're planning to save to MySQL).
+3. Set up your server. MySQL or mongoDB are supported.
 
-On Ubuntu, you can do this using the following commands:
-
-```
-sudo apt-get update
-sudo apt-get install mysql-server
-sudo mysql_secure_installation
-```
-
-On Mac OS, you can use Homebrew:
-
-```
-brew update
-brew install mysql
-mysql.server start
-mysql_secure_installation
-```
-
-4. Create your MySQL database and user (if necessary) and grant necessary permissions for the user on the database.
+4. Create your database and user (if necessary) and grant necessary permissions for the user on the database.
 5. Create a config.ini file in the same directory as your script. A example config file is included in this repo. Replace any placeholders with your actual data.
 6. Run the script:
 
 ```
-python feedly_fetcher.py
+python feedly_fetcher_{database}.py
 ```
 
 7. The articles will be fetched and saved in the format specified in your config file.

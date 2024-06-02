@@ -3,11 +3,9 @@ import time
 import requests
 import csv
 import json
-import pymysql
 import configparser
 import os
-
-
+from pymongo import MongoClient
 
 def flatten_json(d, prefix='', separator='_', max_depth=None, depth=0):
     flattened = {}
@@ -91,53 +89,32 @@ class FeedlyFetcher:
 
         print('Article data has been successfully saved to "article_data.json"')
 
-    def save_to_mysql(self, article_list, host, user, password, database_name, table_name, columns):
+    def save_to_mongodb(self, article_list, host, port, database_name, collection_name, columns):
         if not article_list:
             print('No articles were fetched. Exiting.')
             sys.exit(0)
 
-        connection = pymysql.connect(
-            host=host,
-            user=user,
-            password=password,
-            database=database_name
-        )
-
-        cursor = connection.cursor()
+        client = MongoClient(host, port)
+        db = client[database_name]
+        collection = db[collection_name]
 
         flattened_articles = [flatten_json(article) for article in article_list]
 
         # Filter out unwanted keys based on the column names specified in the config file.
-        flattened_articles = [
+        filtered_articles = [
             {key: article[key] for key in columns if key in article}
             for article in flattened_articles
         ]
 
-        column_names_types = [
-            f"`{column_name}` TEXT"
-            for column_name in columns
-        ]
-        create_table_query = f"CREATE TABLE IF NOT EXISTS `{table_name}` ({', '.join(column_names_types)}) ROW_FORMAT=DYNAMIC;"
-        cursor.execute(create_table_query)
-        connection.commit()
-
-        # Now we insert the data
-        for article in flattened_articles:
-            column_names = ', '.join(f"`{column_name}`" for column_name in article.keys())
-            insert_query = f"INSERT INTO `{table_name}` ({column_names}) VALUES ({', '.join(['%s'] * len(article))});"
-            cursor.execute(insert_query, tuple(article.values()))
-
-        connection.commit()
-        print('Article data has been successfully saved to MySQL')
-
+        collection.insert_many(filtered_articles)
+        print('Article data has been successfully saved to MongoDB')
 
 def main():
-    
     config = configparser.ConfigParser()
     config.read('config/local/config.ini')
 
     feedly_config = config['Feedly']
-    mysql_config = config['MySQL']
+    mongodb_config = config['MongoDB']
 
     token = feedly_config.get('token')
     stream_id = feedly_config.get('stream_id')
@@ -162,17 +139,15 @@ def main():
         fetcher.save_to_csv(all_articles, output_filename, max_depth, columns)
     elif output_format == 'json':
         fetcher.save_to_json(all_articles)
-    elif output_format == 'sql':
-        fetcher.save_to_mysql(
+    elif output_format == 'mongodb':
+        fetcher.save_to_mongodb(
             all_articles, 
-            mysql_config['host'],
-            mysql_config['user'],
-            mysql_config['password'],
-            mysql_config['database'],
-            mysql_config['table'],
-            columns  # Pass the columns from the config here.
+            mongodb_config['host'],
+            mongodb_config.getint('port'),
+            mongodb_config['database'],
+            mongodb_config['collection'],
+            columns
         )
-
 
 if __name__ == '__main__':
     main()
