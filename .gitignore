@@ -1,5 +1,6 @@
 python/article_data.csv
 .DS_Store
+.code-workspace
 venv
 config.ini
 
