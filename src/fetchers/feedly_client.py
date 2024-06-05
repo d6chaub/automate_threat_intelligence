@@ -6,7 +6,7 @@ from src.fetchers.client_interface import DataFetcher
 class FeedlyClient(DataFetcher):
     """Concrete implementation of DataFetcher to fetch data from Feedly."""
 
-    def __init__(self, token: str, stream_ids: list[str], article_count: int = 100):
+    def __init__(self, token: str, stream_feed_mappings: list[dict[str, str]], article_count: int = 100):
         """
         Initialize the Feedly client with necessary parameters.
         
@@ -18,7 +18,7 @@ class FeedlyClient(DataFetcher):
         headers (dict): Headers to be included in the request to the Feedly API.
         """
         self.token: str = token
-        self.stream_ids: list[str] = stream_ids
+        self.stream_feed_mappings: list[dict[str, str]] = stream_feed_mappings
         self.article_count: int = article_count
         self.headers: dict = {'Authorization': f'Bearer {token}'}
 
@@ -29,56 +29,78 @@ class FeedlyClient(DataFetcher):
             dict[str, str]: Parsed data fetched from Feedly.
         """
         # And then call fetch_articles() to get the articles.
-        logging.debug('Fetching data from Feedly, from the following feeds:')
-        logging.debug(self.stream_ids)
+        logging.info('Fetching data from Feedly, from the following feeds:')
+        logging.info([mapping['feed_name'] for mapping in self.stream_feed_mappings])
+        for i, mapping in enumerate(self.stream_feed_mappings):
+            logging.info('%d. %s', i, mapping['feed_name'])
+        logging.info('\n')
 
         alerts_all_streams: list[dict] = []
 
-        for stream_id in self.stream_ids:
-            logging.info('Fetching articles from stream: %s', stream_id)
-            stream_url: str = f'https://feedly.com/v3/streams/contents?streamId={stream_id}&count={self.article_count}'
-            stream_alerts: list[dict] = self._fetch_articles_from_stream(stream_url)
-            logging.info('Fetched %d articles from stream: %s', len(stream_alerts), stream_id)
+        # Fetch all articles from each pre-configured stream.
+        for mapping in self.stream_feed_mappings:
+            stream_alerts: list[dict] = self._fetch_articles_from_stream(mapping)
             alerts_all_streams.extend(stream_alerts)
-            logging.info('After extending, alerts_all_streams has %d articles', len(alerts_all_streams))
+            logging.info('\n*After fetching all alerts from stream %s, the running total of alerts from all stream fetched is: %d*\n', mapping['feed_name'], len(alerts_all_streams))
+
+        logging.info('\n\n**After fetching all alerts from all streams, the final count of alerts fetched is: %d**\n\n', len(alerts_all_streams))
 
         return alerts_all_streams
 
-    def _fetch_articles_from_stream(self, stream_url, fetch_all: bool = False, last_timestamp: int | None = None) -> list[dict]:
+    def _fetch_articles_from_stream(
+            self,
+            stream_feed_mapping: dict[str, str],
+            fetch_all: bool = False,
+            last_timestamp: int | None = None
+        ) -> list[dict]:
         """
-        Fetch articles from a predefined URL, optionally filtering by timestamp and handling pagination.
+        Fetch articles from a URL, optionally filtering by timestamp and handling pagination.
     
         Parameters:
+        - stream_feed_mapping (dict[str, str]): Mapping of a Feedly stream ID to the name of the feed associatated with it.
         - fetch_all (bool): If True, continue fetching until no more articles are available.
         - last_timestamp (int | None): Unix timestamp to fetch articles newer than this time. None to ignore.
     
         Returns:
         - list[dict]: A list of articles, each represented as a dictionary.
         """
+
+        
+        feed_name: str = stream_feed_mapping['feed_name']
+        stream_id: str = stream_feed_mapping['stream_id']
+        stream_url: str = f'https://feedly.com/v3/streams/contents?streamId={stream_id}&count={self.article_count}'
+
         all_articles: list[dict] = []
         continuation: str | None = None
 
+        logging.info('Initializing fetch of articles from feed: "%s"', feed_name)
+        logging.info('')
+
         while True:
-            logging.info('Fetching articles from Feedly...')
             params: dict = {'count': self.article_count}
             if last_timestamp is not None:
                 params['newerThan'] = last_timestamp
+                logging.debug('Fetching articles newer than timestamp: %s', last_timestamp)
             if continuation is not None:
                 params['continuation'] = continuation
-                logging.debug('Fetching next page of articles with continuation: %s', continuation)
+                logging.debug('Fetching next batch of articles with continuation: %s', continuation)
 
             response = requests.get(stream_url, headers=self.headers, params=params)
-            logging.info('Response status code: %s', response.status_code)
+            logging.debug('Response status code of batch request to feed: %s', response.status_code)
             response.raise_for_status()
             
             response_dict = response.json()
-            logging.info('Fetched %d articles from Feedly', len(response_dict.get('items', [])))
+            logging.info('Fetched batch of %d articles from feed: "%s"', len(response_dict.get('items', [])), feed_name)
+
 
             all_articles.extend(response_dict.get('items', []))
-            logging.info('Extended all_articles to %d articles', len(all_articles))
+            logging.info('Running total of articles fetched from feed "%s" is: %d articles', feed_name, len(all_articles))
             continuation = response_dict.get('continuation')
             if not fetch_all or continuation is None:
                 break
+        
+        logging.info('Finished fetching articles from feed "%s"', feed_name)
+        logging.info('Total number of articles fetched from feed %s is: %d articles', feed_name, len(all_articles))
 
         return all_articles
 
@@ -98,18 +120,17 @@ if __name__ == '__main__':
     fetch_all: bool = bool(config.get('fetch_all', 'False'))
     hours_ago: bool = config.get('hours_ago')
 
-    stream_ids: list[str] = [mapping['stream_id'] for mapping in stream_feed_mappings]
-    fetcher = FeedlyClient(token, stream_ids, article_count)
+    
+    fetcher = FeedlyClient(token, stream_feed_mappings, article_count)
     logging.info('Initialized Feedly client')
     
     all_articles: dict = fetcher.fetch_alerts()
-    logging.info('Fetched %d articles from Feedly', len(all_articles))
 
     # Get fieldnames from keys of first article
     columns = all_articles[0].keys()
 
     # Save dict to /data/feedly_class_data.json
-    with open('data/feedly_class_data.json', 'w', encoding='utf-8') as file:
+    with open('data/newest_data.json', 'w', encoding='utf-8') as file:
         json.dump(all_articles, file)
 
     # Data Science to do:

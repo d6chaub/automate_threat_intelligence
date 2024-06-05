@@ -17,8 +17,11 @@ class TestFeedlyClient(unittest.TestCase):
     def setUp(self):
         """Prepare environment for each test."""
         self.token = 'fake_token'
-        self.stream_ids = ['stream1', 'stream2']
-        self.client = FeedlyClient(token=self.token, stream_ids=self.stream_ids)
+        self.stream_feed_mappings = [
+            {'feed_name': 'Test Feed 1', 'stream_id': '1234567890'},
+            {'feed_name': 'Test Feed 2', 'stream_id': '0987654321'}
+        ]
+        self.client = FeedlyClient(token=self.token, stream_feed_mappings=self.stream_feed_mappings)
         self.mock_data = load_mock_data()
 
         config: dict = load_config()
