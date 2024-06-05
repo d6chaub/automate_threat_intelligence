@@ -40,3 +40,17 @@ Test (replacing 'your-env' with appropriate name):
 conda deactivate
 conda activate your-env
 echo $PYTHONPATH  # Should show the path to your repo appended
+
+## Python package 'pre-commit' for git hooks
+
+To make developer workflow easier, the repo is configured to run git hooks
+upon commit which run unit tests, and can perform other actions along the line.
+
+The hook specifications are contained in the `.pre-commit-config.yaml` in the root of the repo.
+
+To ensure the pre-commit hooks run on your local machine, pip-install "pre-commit" to your conda env,
+then run:
+
+`pre-commit install`
+
+Any failing test will block the local commit.
