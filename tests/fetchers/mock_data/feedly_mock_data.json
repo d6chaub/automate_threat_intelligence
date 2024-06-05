@@ -1,0 +1,183 @@
+[
+    {
+      "language": "en",
+      "id": "8HRqF+HLSOwmc5TejVtQFNgJV+IjW20gTvr8o8MF+ts=_18fe77e96f1:2c33fa:fc838320",
+      "fingerprint": "d68f721e",
+      "originId": "https://securityaffairs.com/?p=164150",
+      "keywords": [
+        "Breaking News",
+        "Security",
+        "Hacking",
+        "hacking news",
+        "information security news",
+        "IT Information Security",
+        "NAS",
+        "Pierluigi Paganini",
+        "Security Affairs",
+        "Security News",
+        "ZYXEL"
+      ],
+      "origin": {
+        "streamId": "feed/http://securityaffairs.co/wordpress/feed",
+        "title": "Security Affairs ",
+        "htmlUrl": "https://securityaffairs.com/"
+      },
+      "published": 1717574498000,
+      "content": {
+        "content": "<div></div>\n<h2 class=\"wp-block-heading\">Zyxel Networks released an emergency security update to address critical vulnerabilities in end-of-life NAS devices.</h2>\n<p>Zyxel Networks released an emergency security u..."
+      },
+      "summary": {
+        "content": "Zyxel Networks released an emergency security update to address critical vulnerabilities..."
+      },
+      "categories": [
+        {
+          "id": "enterprise/shell/category/1e1955cd-0829-44ac-a373-f10ad5f0e88c",
+          "label": "Cyber Attacks"
+        },
+        {
+          "id": "enterprise/shell/category/e7494b76-6563-49eb-aedf-5588c9613ac8",
+          "label": "Uncategorised"
+        },
+        {
+          "id": "enterprise/shell/category/39cc9153-c695-4982-bf28-9a0afc0ab8ee",
+          "label": "CERTs"
+        },
+        {
+          "id": "enterprise/shell/category/8042d666-a5fc-44be-91d3-c0ccd79b9fa0",
+          "label": "Cyber prio2"
+        }
+      ],
+      "commonTopics": [
+        {
+          "type": "topic",
+          "id": "nlp/f/topic/2440",
+          "label": "All vulnerabilities",
+          "score": 1,
+          "salienceLevel": "about"
+        },
+        {
+          "type": "topic",
+          "id": "nlp/f/topic/3003",
+          "label": "Cyber Security",
+          "score": 1,
+          "causes": [
+            {
+              "id": "nlp/f/topic/2440",
+              "label": "All vulnerabilities"
+            }
+          ],
+          "salienceLevel": "about"
+        }
+      ],
+      "streamId": "feed/https://feedly.com/f/alert/3144b3a9-fd37-4856-9877-41684cd7d4d6",
+      "title": "New PoC for Crit Vulnerabilities ",
+      "feedlyFeedType": "WebAlert",
+      "searchTerms": {
+        "isComplexFilter": false,
+        "parts": [
+          {
+            "text": "HIGH"
+          },
+          {
+            "id": "nlp/f/topic/7002",
+            "label": "Proof of Exploit"
+          },
+          {
+            "id": "nlp/f/publicationBucket/byf:cybersecurity-bundle",
+            "label": "Cybersecurity"
+          }
+        ]
+      }
+    },
+
+
+    {
+        "language": "en",
+        "id": "iJsgu1DRIkYZoeZgqPqgAhWJiN0n5njLRUb77oDapDY=_18fe72821b4:22d074:4a232aea",
+        "fingerprint": "adbd1e82",
+        "originId": "tag:theregister.com,2005:story234428",
+        "origin": {
+          "title": "The Register – Security",
+          "streamId": "feed/http://www.theregister.co.uk/security/headlines.atom",
+          "htmlUrl": "https://www.theregister.com/security/"
+        },
+        "published": 1717569854000,
+        "title": "Microsoft paid Tenable a bug bounty for an Azure flaw it says doesn't need a fix, just better documentation",
+        "content": {
+          "content": "<div><div><div><div><div>\n<p>A vulnerability — or just Azure working as intended, depending on who you ask — in Microsoft's cloud potentially allows miscreants to wave away firewall rules and access other people's private web resources.</p>\n<p>The issue, discovered by the research team at vulnerability assessment outfit Tenable, ...</p></div></div></div></div></div>"
+        },
+        "summary": {
+          "content": "<h4>Let customers interfere with other tenants? That's our cloud working by design, Redmond seems to say</h4> <p>A vulnerability — or just Azure working as intended, depending on who you ask — in Microsoft's cloud potentially allows miscreants to wave away firewall rules and access other people's private web resources.…</p>"
+        },
+        "categories": [
+          {
+            "id": "enterprise/shell/category/1e1955cd-0829-44ac-a373-f10ad5f0e88c",
+            "label": "Cyber Attacks"
+          },
+          {
+            "id": "enterprise/shell/category/e7494b76-6563-49eb-aedf-5588c9613ac8",
+            "label": "Uncategorised"
+          },
+          {
+            "id": "enterprise/shell/category/39cc9153-c695-4982-bf28-9a0afc0ab8ee",
+            "label": "CERTs"
+          }
+        ],
+        "commonTopics": [
+          {
+            "type": "topic",
+            "id": "nlp/f/topic/3003",
+            "label": "Cyber Security",
+            "score": 0.896,
+            "salienceLevel": "about"
+          },
+          {
+            "type": "vulnerability",
+            "id": "nlp/f/topic/4995",
+            "label": "Vulnerability Patches",
+            "score": 0.77,
+            "salienceLevel": "about"
+          }
+        ],
+        "entities": [
+          {
+            "type": "consumerGood",
+            "disambiguated": true,
+            "id": "nlp/f/entity/gz:org:microsoft-azure",
+            "label": "Microsoft Azure",
+            "mentions": [
+              {
+                "text": "Azure"
+              }
+            ],
+            "salienceLevel": "about"
+          },
+          {
+            "type": "org",
+            "disambiguated": true,
+            "id": "nlp/f/entity/gz:org:microsoft",
+            "label": "Microsoft",
+            "mentions": [
+              {
+                "text": "Microsoft"
+              }
+            ],
+            "salienceLevel": "about"
+          },
+          {
+            "type": "org",
+            "disambiguated": true,
+            "id": "nlp/f/entity/gz:org:tenable-inc",
+            "label": "Tenable, Inc.",
+            "mentions": [
+              {
+                "text": "Tenable"
+              }
+            ],
+            "salienceLevel": "about"
+          }
+        ]
+      }
+      
+]
+  
