@@ -3,6 +3,10 @@ python/article_data.csv
 venv
 config.ini
 
+# Cache Folders.
+__pycache__/
+.cache/
+
 # Local Folders.
 data/
 config/local
