@@ -14,6 +14,7 @@ Eventually the repo will be installable as a python package to make import easie
 In the meantime, to make testing easier, I'm creating an activation and deactivation script in my conda env.
 
 First, create a new conda environment and active, then run, changing the path to the repo as per your local setup:
+
 ```
 LOCAL_PATH_TO_REPO_ROOT=/Users/yonah.citron/repos/automate_threat_intelligence
 
@@ -24,16 +25,15 @@ mkdir -p $ACTIVATE_DIR
 mkdir -p $DEACTIVATE_DIR
 
 echo '#!/bin/sh' > $ACTIVATE_DIR/env_vars.sh
-echo 'export OLD_PYTHONPATH="$PYTHONPATH"' >> $ACTIVATE_DIR/env_vars.sh
-echo 'export PYTHONPATH="$LOCAL_PATH_TO_REPO_ROOT:$PYTHONPATH"' >> $ACTIVATE_DIR/env_vars.sh
+echo "export OLD_PYTHONPATH=\"\$PYTHONPATH\"" >> $ACTIVATE_DIR/env_vars.sh
+echo "export PYTHONPATH=\"$LOCAL_PATH_TO_REPO_ROOT:\$PYTHONPATH\"" >> $ACTIVATE_DIR/env_vars.sh
 
 echo '#!/bin/sh' > $DEACTIVATE_DIR/unset_env_vars.sh
-echo 'export PYTHONPATH="$OLD_PYTHONPATH"' >> $DEACTIVATE_DIR/unset_env_vars.sh
+echo "export PYTHONPATH=\"\$OLD_PYTHONPATH\"" >> $DEACTIVATE_DIR/unset_env_vars.sh
 echo 'unset OLD_PYTHONPATH' >> $DEACTIVATE_DIR/unset_env_vars.sh
 
 chmod +x $ACTIVATE_DIR/env_vars.sh
 chmod +x $DEACTIVATE_DIR/unset_env_vars.sh
-
 ```
 
 
