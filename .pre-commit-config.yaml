@@ -1,11 +1,32 @@
 repos:
   - repo: local
     hooks:
+      - id: update-requirements
+        name: Update requirements
+        entry: echo " **** for some reason the 'pre-commit-config.yaml' is running FINE when I run it with pre-commit run --all-files -v   but NOT when it's triggered with a git commit!!!!   FIND OUT WHY THIS IS THE CASE!!!!  **** "
+        language: system
+        pass_filenames: false
+        always_run: false
+        stages: [commit]
       - id: pytest
         name: Run Pytest
         entry: pytest
         language: system
         types: [python]
+        pass_filenames: false
+        always_run: false
+        stages: [commit]
+      - id: update-requirements
+        name: Update requirements
+        entry: echo "hello - UNCOMMENT THIS WHEN I HAVE INTERNET" #pip-compile --upgrade --output-file requirements.txt requirements.in && git add requirements.txt
+        language: system
+        pass_filenames: false
+        always_run: false
+        stages: [commit]
+      - id: test-coverage
+        name: Calculate the amount of the codebase covered by unit-tests.
+        entry: echo "** Remember to download the module for test-coverage, add to dev-requirements.txt if not already there!! **"
+        language: system
         pass_filenames: false
         always_run: true
         stages: [commit]
