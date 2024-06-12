@@ -115,9 +115,9 @@ Step 2: Start MongoDB
 Once MongoDB is installed, you can start the MongoDB server using the following commands:
 
 1. navigate to "C:\Program Files\MongoDB\Server\7.0\bin"
-2.  "mongod" or may need ".\mongod --dbpath "C:\Program Files\MongoDB\Server\7.0\data\db"
-
-Step 3: Update the config.ini file accordingly
+2. one time action - create a data db with "New-Item -Path "$env:USERPROFILE\data\db" -ItemType Directory -Force" or other method. all that matters is "data/db" exists somewhere.
+3.  .\mongod --dbpath "$env:USERPROFILE\data\db"
+4. Update the config.ini file accordingly
 Ensure that your config.ini file has the correct settings for connecting to your local MongoDB instance!
 
 ### Notes
