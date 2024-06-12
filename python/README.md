@@ -103,6 +103,23 @@ To use verbose mode:
 python feedly_power_search.py --token YOUR_FEEDLY_ENTERPRISE_TOKEN --query_file sample_power_search_query.json -v
 ```
 
+### Installing local mongodb
+First, you need to install MongoDB on your local machine. The installation process differs based on your operating system.
+
+On Windows:
+Download MongoDB from the official MongoDB website.
+Run the installer and follow the installation instructions.
+After installation, add MongoDB's bin directory to your system's PATH environment variable.
+
+Step 2: Start MongoDB
+Once MongoDB is installed, you can start the MongoDB server using the following commands:
+
+1. navigate to "C:\Program Files\MongoDB\Server\7.0\bin"
+2.  "mongod" or may need ".\mongod --dbpath "C:\Program Files\MongoDB\Server\7.0\data\db"
+
+Step 3: Update the config.ini file accordingly
+Ensure that your config.ini file has the correct settings for connecting to your local MongoDB instance!
+
 ### Notes
 
 - The `--token` argument is required to access the Feedly API. You can generate your Feedly API token from the Manage Team area of your Feedly account.
