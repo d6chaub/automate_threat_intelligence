@@ -1,3 +1,4 @@
+import logging
 from pymongo import MongoClient
 from pydantic import BaseModel
 
@@ -42,18 +43,23 @@ class AlertsDAO:
     def add_alerts(self, alerts: list[dict]):
         return self.collection.insert_many(alerts).inserted_ids
 
-    
+    # ToDo: Add debug logging for whether an alert is already present in the database.
+    # Do this for the add_alerts_if_not_exist method also.
     def add_alert_if_not_exists(self, alert: dict):
 
-        def _origin_id_already_present(self, origin_id):
-            return self.collection.find_one({"originId": origin_id})
+        def _origin_id_already_present(origin_id):
+            return bool(self.collection.find_one({"originId": origin_id}))
 
         if not _origin_id_already_present(alert["originId"]):
             return self.add_alert(alert)
         
-    def add_alerts_if_not_exist(self, alerts: list[dict]):
+    def add_alerts_if_not_exist(self, alerts: list[dict]) -> list[int]:
+        inserted_ids = []
         for alert in alerts:
-            self.add_alert_if_not_exists(alert)
+            inserted_id = self.add_alert_if_not_exists(alert)
+            if inserted_id:
+                inserted_ids.append(inserted_id)
+        return inserted_ids
 
 
     def delete_alert(self, item_id):

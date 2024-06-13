@@ -1,183 +1,411 @@
 [
+  {
+    "language": "en",
+    "id": "8HRqF+HLSOwmc5TejVtQFNgJV+IjW20gTvr8o8MF+ts=_18fe77e96f1:2c33fa:fc838320",
+    "fingerprint": "d68f721e",
+    "originId": "https://securityaffairs.com/?p=164150",
+    "keywords": [
+      "Breaking News",
+      "Security",
+      "Hacking",
+      "hacking news",
+      "information security news",
+      "IT Information Security",
+      "NAS",
+      "Pierluigi Paganini",
+      "Security Affairs",
+      "Security News",
+      "ZYXEL"
+    ],
+    "origin": {
+      "streamId": "feed/http://securityaffairs.co/wordpress/feed",
+      "title": "Security Affairs ",
+      "htmlUrl": "https://securityaffairs.com/"
+    },
+    "published": 1717574498000,
+    "content": {
+      "content": "<div></div>\n<h2 class=\"wp-block-heading\">Zyxel Networks released an emergency security update to address critical vulnerabilities in end-of-life NAS devices.</h2>\n<p>Zyxel Networks released an emergency security u..."
+    },
+    "summary": {
+      "content": "Zyxel Networks released an emergency security update to address critical vulnerabilities..."
+    },
+    "categories": [
+      {
+        "id": "enterprise/shell/category/1e1955cd-0829-44ac-a373-f10ad5f0e88c",
+        "label": "Cyber Attacks"
+      },
+      {
+        "id": "enterprise/shell/category/e7494b76-6563-49eb-aedf-5588c9613ac8",
+        "label": "Uncategorised"
+      },
+      {
+        "id": "enterprise/shell/category/39cc9153-c695-4982-bf28-9a0afc0ab8ee",
+        "label": "CERTs"
+      },
+      {
+        "id": "enterprise/shell/category/8042d666-a5fc-44be-91d3-c0ccd79b9fa0",
+        "label": "Cyber prio2"
+      }
+    ],
+    "commonTopics": [
+      {
+        "type": "topic",
+        "id": "nlp/f/topic/2440",
+        "label": "All vulnerabilities",
+        "score": 1,
+        "salienceLevel": "about"
+      },
+      {
+        "type": "topic",
+        "id": "nlp/f/topic/3003",
+        "label": "Cyber Security",
+        "score": 1,
+        "causes": [
+          {
+            "id": "nlp/f/topic/2440",
+            "label": "All vulnerabilities"
+          }
+        ],
+        "salienceLevel": "about"
+      }
+    ],
+    "streamId": "feed/https://feedly.com/f/alert/3144b3a9-fd37-4856-9877-41684cd7d4d6",
+    "title": "New PoC for Crit Vulnerabilities ",
+    "feedlyFeedType": "WebAlert",
+    "searchTerms": {
+      "isComplexFilter": false,
+      "parts": [
+        {
+          "text": "HIGH"
+        },
+        {
+          "id": "nlp/f/topic/7002",
+          "label": "Proof of Exploit"
+        },
+        {
+          "id": "nlp/f/publicationBucket/byf:cybersecurity-bundle",
+          "label": "Cybersecurity"
+        }
+      ]
+    }
+  },
+  {
+    "language": "en",
+    "id": "iJsgu1DRIkYZoeZgqPqgAhWJiN0n5njLRUb77oDapDY=_18fe72821b4:22d074:4a232aea",
+    "fingerprint": "adbd1e82",
+    "originId": "tag:theregister.com,2005:story234428",
+    "origin": {
+      "title": "The Register – Security",
+      "streamId": "feed/http://www.theregister.co.uk/security/headlines.atom",
+      "htmlUrl": "https://www.theregister.com/security/"
+    },
+    "published": 1717569854000,
+    "title": "Microsoft paid Tenable a bug bounty for an Azure flaw it says doesn't need a fix, just better documentation",
+    "content": {
+      "content": "<div><div><div><div><div>\n<p>A vulnerability — or just Azure working as intended, depending on who you ask — in Microsoft's cloud potentially allows miscreants to wave away firewall rules and access other people's private web resources.</p>\n<p>The issue, discovered by the research team at vulnerability assessment outfit Tenable, ...</p></div></div></div></div></div>"
+    },
+    "summary": {
+      "content": "<h4>Let customers interfere with other tenants? That's our cloud working by design, Redmond seems to say</h4> <p>A vulnerability — or just Azure working as intended, depending on who you ask — in Microsoft's cloud potentially allows miscreants to wave away firewall rules and access other people's private web resources.…</p>"
+    },
+    "categories": [
+      {
+        "id": "enterprise/shell/category/1e1955cd-0829-44ac-a373-f10ad5f0e88c",
+        "label": "Cyber Attacks"
+      },
+      {
+        "id": "enterprise/shell/category/e7494b76-6563-49eb-aedf-5588c9613ac8",
+        "label": "Uncategorised"
+      },
+      {
+        "id": "enterprise/shell/category/39cc9153-c695-4982-bf28-9a0afc0ab8ee",
+        "label": "CERTs"
+      }
+    ],
+    "commonTopics": [
+      {
+        "type": "topic",
+        "id": "nlp/f/topic/3003",
+        "label": "Cyber Security",
+        "score": 0.896,
+        "salienceLevel": "about"
+      },
+      {
+        "type": "vulnerability",
+        "id": "nlp/f/topic/4995",
+        "label": "Vulnerability Patches",
+        "score": 0.77,
+        "salienceLevel": "about"
+      }
+    ],
+    "entities": [
+      {
+        "type": "consumerGood",
+        "disambiguated": true,
+        "id": "nlp/f/entity/gz:org:microsoft-azure",
+        "label": "Microsoft Azure",
+        "mentions": [
+          {
+            "text": "Azure"
+          }
+        ],
+        "salienceLevel": "about"
+      },
+      {
+        "type": "org",
+        "disambiguated": true,
+        "id": "nlp/f/entity/gz:org:microsoft",
+        "label": "Microsoft",
+        "mentions": [
+          {
+            "text": "Microsoft"
+          }
+        ],
+        "salienceLevel": "about"
+      },
+      {
+        "type": "org",
+        "disambiguated": true,
+        "id": "nlp/f/entity/gz:org:tenable-inc",
+        "label": "Tenable, Inc.",
+        "mentions": [
+          {
+            "text": "Tenable"
+          }
+        ],
+        "salienceLevel": "about"
+      }
+    ]
+  },
     {
       "language": "en",
-      "id": "8HRqF+HLSOwmc5TejVtQFNgJV+IjW20gTvr8o8MF+ts=_18fe77e96f1:2c33fa:fc838320",
-      "fingerprint": "d68f721e",
-      "originId": "https://securityaffairs.com/?p=164150",
+      "id": "F9LhGd0bSe7v8+YdZq7wEJ5T+WtU9Vjk7LfG0gPQVjU=_19gfd82p3j4:4s24eg:as256h20",
+      "fingerprint": "h92j820s",
+      "originId": "https://threatpost.com/?p=185327",
       "keywords": [
-        "Breaking News",
-        "Security",
-        "Hacking",
-        "hacking news",
-        "information security news",
-        "IT Information Security",
-        "NAS",
-        "Pierluigi Paganini",
-        "Security Affairs",
-        "Security News",
-        "ZYXEL"
+          "Cybersecurity",
+          "Data Breach",
+          "Information Security",
+          "ThreatPost",
+          "Ransomware"
       ],
       "origin": {
-        "streamId": "feed/http://securityaffairs.co/wordpress/feed",
-        "title": "Security Affairs ",
-        "htmlUrl": "https://securityaffairs.com/"
+          "streamId": "feed/http://threatpost.com/feed",
+          "title": "ThreatPost",
+          "htmlUrl": "https://threatpost.com/"
       },
-      "published": 1717574498000,
+      "published": 1717582222000,
       "content": {
-        "content": "<div></div>\n<h2 class=\"wp-block-heading\">Zyxel Networks released an emergency security update to address critical vulnerabilities in end-of-life NAS devices.</h2>\n<p>Zyxel Networks released an emergency security u..."
+          "content": "<div></div>\n<h2 class=\"wp-block-heading\">New Ransomware Attack Hits Major Healthcare Provider</h2>\n<p>A major healthcare provider has been hit with a ransomware attack, compromising sensitive patient data...</p>"
       },
       "summary": {
-        "content": "Zyxel Networks released an emergency security update to address critical vulnerabilities..."
+          "content": "A major healthcare provider has been hit with a ransomware attack, compromising sensitive patient data..."
       },
       "categories": [
-        {
-          "id": "enterprise/shell/category/1e1955cd-0829-44ac-a373-f10ad5f0e88c",
-          "label": "Cyber Attacks"
-        },
-        {
-          "id": "enterprise/shell/category/e7494b76-6563-49eb-aedf-5588c9613ac8",
-          "label": "Uncategorised"
-        },
-        {
-          "id": "enterprise/shell/category/39cc9153-c695-4982-bf28-9a0afc0ab8ee",
-          "label": "CERTs"
-        },
-        {
-          "id": "enterprise/shell/category/8042d666-a5fc-44be-91d3-c0ccd79b9fa0",
-          "label": "Cyber prio2"
-        }
+          {
+              "id": "enterprise/shell/category/4d2f1dcd-0829-44ac-a373-f10ad5f0e88c",
+              "label": "Data Breaches"
+          },
+          {
+              "id": "enterprise/shell/category/e7494b76-6563-49eb-aedf-5588c9613ac8",
+              "label": "Uncategorised"
+          },
+          {
+              "id": "enterprise/shell/category/39cc9153-c695-4982-bf28-9a0afc0ab8ee",
+              "label": "Healthcare"
+          }
       ],
       "commonTopics": [
-        {
-          "type": "topic",
-          "id": "nlp/f/topic/2440",
-          "label": "All vulnerabilities",
-          "score": 1,
-          "salienceLevel": "about"
-        },
-        {
-          "type": "topic",
-          "id": "nlp/f/topic/3003",
-          "label": "Cyber Security",
-          "score": 1,
-          "causes": [
-            {
+          {
+              "type": "topic",
               "id": "nlp/f/topic/2440",
-              "label": "All vulnerabilities"
-            }
-          ],
-          "salienceLevel": "about"
-        }
+              "label": "All vulnerabilities",
+              "score": 1,
+              "salienceLevel": "about"
+          },
+          {
+              "type": "topic",
+              "id": "nlp/f/topic/3003",
+              "label": "Cyber Security",
+              "score": 1,
+              "causes": [
+                  {
+                      "id": "nlp/f/topic/2440",
+                      "label": "All vulnerabilities"
+                  }
+              ],
+              "salienceLevel": "about"
+          }
       ],
       "streamId": "feed/https://feedly.com/f/alert/3144b3a9-fd37-4856-9877-41684cd7d4d6",
-      "title": "New PoC for Crit Vulnerabilities ",
+      "title": "Healthcare Provider Ransomware Attack",
       "feedlyFeedType": "WebAlert",
       "searchTerms": {
-        "isComplexFilter": false,
-        "parts": [
-          {
-            "text": "HIGH"
-          },
-          {
-            "id": "nlp/f/topic/7002",
-            "label": "Proof of Exploit"
-          },
-          {
-            "id": "nlp/f/publicationBucket/byf:cybersecurity-bundle",
-            "label": "Cybersecurity"
-          }
-        ]
+          "isComplexFilter": false,
+          "parts": [
+              {
+                  "text": "CRITICAL"
+              },
+              {
+                  "id": "nlp/f/topic/7002",
+                  "label": "Ransomware"
+              },
+              {
+                  "id": "nlp/f/publicationBucket/byf:cybersecurity-bundle",
+                  "label": "Cybersecurity"
+              }
+          ]
       }
     },
-
-
     {
-        "language": "en",
-        "id": "iJsgu1DRIkYZoeZgqPqgAhWJiN0n5njLRUb77oDapDY=_18fe72821b4:22d074:4a232aea",
-        "fingerprint": "adbd1e82",
-        "originId": "tag:theregister.com,2005:story234428",
-        "origin": {
-          "title": "The Register – Security",
-          "streamId": "feed/http://www.theregister.co.uk/security/headlines.atom",
-          "htmlUrl": "https://www.theregister.com/security/"
-        },
-        "published": 1717569854000,
-        "title": "Microsoft paid Tenable a bug bounty for an Azure flaw it says doesn't need a fix, just better documentation",
-        "content": {
-          "content": "<div><div><div><div><div>\n<p>A vulnerability — or just Azure working as intended, depending on who you ask — in Microsoft's cloud potentially allows miscreants to wave away firewall rules and access other people's private web resources.</p>\n<p>The issue, discovered by the research team at vulnerability assessment outfit Tenable, ...</p></div></div></div></div></div>"
-        },
-        "summary": {
-          "content": "<h4>Let customers interfere with other tenants? That's our cloud working by design, Redmond seems to say</h4> <p>A vulnerability — or just Azure working as intended, depending on who you ask — in Microsoft's cloud potentially allows miscreants to wave away firewall rules and access other people's private web resources.…</p>"
-        },
-        "categories": [
+      "language": "en",
+      "id": "B8XhN1xPQeVm3+JdM5wQGJ9T+PtK8Zlo8HjJ1mLPOoU=_20fe72n13b5:32d1h5:5b333bea",
+      "fingerprint": "a97e3h81",
+      "originId": "https://infosecurity-magazine.com/?p=195267",
+      "origin": {
+          "title": "InfoSecurity Magazine",
+          "streamId": "feed/http://infosecurity-magazine.com/rss",
+          "htmlUrl": "https://infosecurity-magazine.com/"
+      },
+      "published": 1717591234000,
+      "title": "Zero-Day Vulnerability Found in Popular IoT Device",
+      "content": {
+          "content": "<div><div><div><div><div>\n<p>Researchers have discovered a zero-day vulnerability in a widely used IoT device, potentially exposing millions of users to cyberattacks.</p>\n<p>The vulnerability, uncovered by a leading cybersecurity firm, allows attackers to remotely execute arbitrary code on the affected devices...</p></div></div></div></div></div>"
+      },
+      "summary": {
+          "content": "<h4>Zero-day vulnerability discovered in popular IoT device</h4> <p>Researchers have discovered a zero-day vulnerability in a widely used IoT device, potentially exposing millions of users to cyberattacks...</p>"
+      },
+      "categories": [
           {
-            "id": "enterprise/shell/category/1e1955cd-0829-44ac-a373-f10ad5f0e88c",
-            "label": "Cyber Attacks"
+              "id": "enterprise/shell/category/1e1955cd-0829-44ac-a373-f10ad5f0e88c",
+              "label": "Vulnerabilities"
           },
           {
-            "id": "enterprise/shell/category/e7494b76-6563-49eb-aedf-5588c9613ac8",
-            "label": "Uncategorised"
+              "id": "enterprise/shell/category/e7494b76-6563-49eb-aedf-5588c9613ac8",
+              "label": "Uncategorised"
           },
           {
-            "id": "enterprise/shell/category/39cc9153-c695-4982-bf28-9a0afc0ab8ee",
-            "label": "CERTs"
+              "id": "enterprise/shell/category/39cc9153-c695-4982-bf28-9a0afc0ab8ee",
+              "label": "IoT"
           }
-        ],
-        "commonTopics": [
+      ],
+      "commonTopics": [
           {
-            "type": "topic",
-            "id": "nlp/f/topic/3003",
-            "label": "Cyber Security",
-            "score": 0.896,
-            "salienceLevel": "about"
+              "type": "topic",
+              "id": "nlp/f/topic/3003",
+              "label": "Cyber Security",
+              "score": 0.896,
+              "salienceLevel": "about"
           },
           {
-            "type": "vulnerability",
-            "id": "nlp/f/topic/4995",
-            "label": "Vulnerability Patches",
-            "score": 0.77,
-            "salienceLevel": "about"
+              "type": "vulnerability",
+              "id": "nlp/f/topic/4995",
+              "label": "Zero-Day Vulnerabilities",
+              "score": 0.77,
+              "salienceLevel": "about"
           }
-        ],
-        "entities": [
+      ],
+      "entities": [
           {
-            "type": "consumerGood",
-            "disambiguated": true,
-            "id": "nlp/f/entity/gz:org:microsoft-azure",
-            "label": "Microsoft Azure",
-            "mentions": [
-              {
-                "text": "Azure"
-              }
-            ],
-            "salienceLevel": "about"
+              "type": "consumerGood",
+              "disambiguated": true,
+              "id": "nlp/f/entity/gz:org:popular-iot-device",
+              "label": "Popular IoT Device",
+              "mentions": [
+                  {
+                      "text": "IoT device"
+                  }
+              ],
+              "salienceLevel": "about"
           },
           {
-            "type": "org",
-            "disambiguated": true,
-            "id": "nlp/f/entity/gz:org:microsoft",
-            "label": "Microsoft",
-            "mentions": [
-              {
-                "text": "Microsoft"
-              }
-            ],
-            "salienceLevel": "about"
-          },
-          {
-            "type": "org",
-            "disambiguated": true,
-            "id": "nlp/f/entity/gz:org:tenable-inc",
-            "label": "Tenable, Inc.",
-            "mentions": [
-              {
-                "text": "Tenable"
-              }
-            ],
-            "salienceLevel": "about"
+              "type": "org",
+              "disambiguated": true,
+              "id": "nlp/f/entity/gz:org:cybersecurity-firm",
+              "label": "Leading Cybersecurity Firm",
+              "mentions": [
+                  {
+                      "text": "cybersecurity firm"
+                  }
+              ],
+              "salienceLevel": "about"
           }
-        ]
+      ]
+    },
+    {
+      "language": "en",
+      "id": "D4JhQ1zSRrXm2+TcL6wQGJ9U+GtK9Vkm9PjK2mNPOpU=_21ge81j14a6:43e3g6:6c444bf",
+      "fingerprint": "b98e4j92",
+      "originId": "https://darkreading.com/?p=204398",
+      "keywords": [
+          "Cybersecurity",
+          "Malware",
+          "DarkReading",
+          "Phishing",
+          "Information Security"
+      ],
+      "origin": {
+          "streamId": "feed/http://darkreading.com/rss",
+          "title": "DarkReading",
+          "htmlUrl": "https://darkreading.com/"
+      },
+      "published": 1717599567000,
+      "content": {
+          "content": "<div></div>\n<h2 class=\"wp-block-heading\">New Phishing Campaign Targets Financial Sector</h2>\n<p>A new phishing campaign is targeting the financial sector, with attackers using sophisticated techniques to steal credentials and sensitive information...</p>"
+      },
+      "summary": {
+          "content": "A new phishing campaign is targeting the financial sector, with attackers using sophisticated techniques to steal credentials and sensitive information..."
+      },
+      "categories": [
+          {
+              "id": "enterprise/shell/category/5d3f2ecl-0930-45ab-b385-d11af5g1e99f",
+              "label": "Phishing"
+          },
+          {
+              "id": "enterprise/shell/category/e7494b76-6563-49eb-aedf-5588c9613ac8",
+              "label": "Uncategorised"
+          },
+          {
+              "id": "enterprise/shell/category/49dd9154-d795-4982-cf29-9b0bf0bc8eea",
+              "label": "Financial"
+          }
+      ],
+      "commonTopics": [
+          {
+              "type": "topic",
+              "id": "nlp/f/topic/3003",
+              "label": "Cyber Security",
+              "score": 0.896,
+              "salienceLevel": "about"
+          },
+          {
+              "type": "attack",
+              "id": "nlp/f/topic/3996",
+              "label": "Phishing Attacks",
+              "score": 0.77,
+              "salienceLevel": "about"
+          }
+      ],
+      "streamId": "feed/https://feedly.com/f/alert/4155c4a9-gd47-5958-8978-51796cdd8e7d",
+      "title": "Phishing Campaign Targets Financial Sector",
+      "feedlyFeedType": "WebAlert",
+      "searchTerms": {
+          "isComplexFilter": false,
+          "parts": [
+              {
+                  "text": "CRITICAL"
+              },
+              {
+                  "id": "nlp/f/topic/7002",
+                  "label": "Phishing"
+              },
+              {
+                  "id": "nlp/f/publicationBucket/byf:cybersecurity-bundle",
+                  "label": "Cybersecurity"
+              }
+          ]
       }
+    }
       
+        
 ]
-  
+

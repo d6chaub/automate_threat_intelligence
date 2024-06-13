@@ -25,7 +25,6 @@ class TestFeedlyClient:
         client, mock_data, stream_count = feedly_client
         # Setup the mock to return a successful response
         mock_response = MagicMock()
-        mock_response.raise_for_status = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
             'items': mock_data,
@@ -40,10 +39,10 @@ class TestFeedlyClient:
         assert "New PoC for Crit Vulnerabilities " in [a['title'] for a in alerts]
         assert "Microsoft paid Tenable a bug bounty for an Azure flaw it says doesn't need a fix, just better documentation" in [a['title'] for a in alerts]
 
-        # In the mocked data, each stream should have 2 articles.
-        assert len(alerts) == stream_count * 2
+        # In the mocked data, each stream should return the same number of alerts.
+        assert len(alerts) == len(mock_data) * stream_count
 
-        # Assert the number of times requests.get was called
+        # Assert the number of times requests.get was called.
         assert mock_get.call_count == stream_count
 
         # Assert that raise_for_status was called once for each call to requests.get

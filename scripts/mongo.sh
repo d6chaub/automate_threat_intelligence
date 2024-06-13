@@ -36,6 +36,21 @@ if ! docker info > /dev/null 2>&1; then
     exit 1
 fi
 
+# Check if there a running mongod process for mac and linux
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    if pgrep -x "mongod" > /dev/null
+    then
+        echo "Error: MongoDB is running on macOS. Stop the service before starting the docker container."
+        exit 1
+    fi
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    if pgrep -x "mongod" > /dev/null
+    then
+        echo "Error: MongoDB is running on Linux. Stop the service before starting the docker container."
+        exit 1
+    fi
+fi
+
 # Variables
 PROJECT_ROOT=$(dirname $(dirname "$0"))
 CONTAINER_NAME="threat-intelligence-mongodb"

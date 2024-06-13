@@ -140,3 +140,5 @@ chmod +x $ACTIVATE_DIR/env_vars.sh
 chmod +x $DEACTIVATE_DIR/unset_env_vars.sh
 
 ```
+
+Add documentation for using mongosh.
