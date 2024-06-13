@@ -18,4 +18,4 @@ $SCRIPT_DIR/mongo.sh --start
 export PYTHONPATH=$PYTHONPATH:$PARENT_DIR
 
 # Run the feedly pipeline
-python3 $SCRIPT_DIR/feedly_pipeline.py $PARENT_DIR
+python3 $SCRIPT_DIR/ingestion_pipeline.py $PARENT_DIR

@@ -1,5 +1,5 @@
 """
-Script should be called by the 'poll_feedly_pipeline.sh' script in the same dir.
+Script should be called by the 'trigger_ingestion_pipeline.sh' script in the same dir.
 """
 import argparse
 import json
