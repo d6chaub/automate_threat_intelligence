@@ -12,6 +12,14 @@ repos:
         pass_filenames: false
         always_run: true 
         stages: [commit]
+      - id: add-updated-lock-file
+        name: Add the updated file to git
+        entry: git add ./poetry.lock
+        language: system
+        types: [python]
+        pass_filenames: false
+        always_run: true 
+        stages: [commit]
       - id: install-dependencies
         name: Install dependencies with poetry
         entry: poetry install
