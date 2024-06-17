@@ -1,12 +1,12 @@
 import logging
 from pymongo import MongoClient
-from pydantic import BaseModel
+from pydantic_settings import BaseSettings
 
 # ToDo: Add type hints to the methods in the AlertsDAO class.
 
-class MongoConfig(BaseModel):
+class MongoConfig(BaseSettings):
     """
-    Configuration for connecting to a MongoDB database.
+    Configuration for connecting to a MongoDB database using environment variables.
 
     Attributes:
         host (str): The host address of the MongoDB server.
@@ -14,10 +14,13 @@ class MongoConfig(BaseModel):
         database (str): The name of the database to connect to.
         alerts_collection (str): The name of the collection to use for alerts.
     """
-    host: str
-    port: int
-    database: str
-    alerts_collection: str
+    host: str = "localhost"  # Default values can be overridden by env vars
+    port: int = 27017
+    database: str = "default_database"
+    alerts_collection: str = "alerts"
+
+    class Config:
+        env_prefix = 'MONGO_'  # Prefixes all environment variables with `MONGO_
 
 class AlertsDAO:
     """

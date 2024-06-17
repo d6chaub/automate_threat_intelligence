@@ -14,46 +14,40 @@ DATASTORE_MAP = {
 
 class DataStoreFactory:
     """
-    Factory class to load configuration and initialize datastore DAOs.
-
-    Using this factory, you can loop through a configuration list of different
-    data stores and initialize the corresponding DAOs dynamically.
+    Factory class to initialize datastore configurations using environment variables.
     
     Supported DAO types:
     - Alerts (MongoDB)
     """
 
     @staticmethod
-    def load_config(config_path: str, datastore: str):
+    def get_config(datastore: str):
         """
-        Load the configuration for the specified data store from the given path.
+        Get the configuration for the specified data store using environment variables.
 
         Args:
-            config_path (str): The path to the configuration file.
-            datastore(str): The type of data store, e.g. "MongoDB".
+            datastore (str): The type of data store, e.g. "MongoDB".
 
         Returns:
-            BaseModel: An instance of the configuration class.
+            BaseSettings: An instance of the configuration class with values loaded from the environment.
 
         Raises:
-            ValueError: If the data source is unknown or configuration validation fails.
+            ValueError: If the data source is unknown.
+            ValidationError: If environment configuration validation fails.
         """
         if datastore not in DATASTORE_MAP:
             raise ValueError(f"Unknown data source: {datastore}")
 
-        with open(config_path, 'r') as file:
-            config_data = json.load(file)
-        
         config_class = DATASTORE_MAP[datastore]["config"]
 
         try:
-            config = config_class(**config_data)
+            config = config_class()  # Automatically loads environment variables
             logging.info("%s configuration loaded successfully.", datastore)
-            logging.debug("%s configuration: %s", datastore, config.model_dump_json())
+            logging.debug("%s configuration: %s", datastore, config.json())
         except ValidationError as e:
             logging.error("Configuration validation error for %s: %s", datastore, e)
             raise
-        
+
         return config
 
     @staticmethod

@@ -1,11 +1,8 @@
 """
 Script should be called by the 'ingestion_pipeline_trigger.sh' script in the same dir.
 """
-import argparse
-import json
 import logging
 import os
-import sys
 from pymongo import MongoClient
 from src.data_access.datastores import DataStoreFactory
 from src.data_access.datastores.alerts import MongoConfig, AlertsDAO
@@ -14,12 +11,7 @@ from src.data_access.fetchers import FetcherFactory
 
 logging.basicConfig(level=logging.INFO)
 
-# Get mandatory argument called 'repo_root' from the shell script.
-parser = argparse.ArgumentParser()
-parser.add_argument('repo_root', type=str)
-args = parser.parse_args()
-repo_root = args.repo_root
-config_dir = os.path.join(repo_root, 'config')
+config_dir = 'config'
 
 # Initialize Feedly Data Access Object.
 config: FeedlyConfig = FetcherFactory.load_config(

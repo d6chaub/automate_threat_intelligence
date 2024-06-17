@@ -141,4 +141,10 @@ chmod +x $DEACTIVATE_DIR/unset_env_vars.sh
 
 ```
 
-Add documentation for using mongosh.
+Add documentation for using mongosh locally to connect to the docker mongo instance.
+
+add docuemntation for the commands and what the different environments do... dev does
+it with tests prod does it without tests....
+
+# When doing it in dev I'd recommend building it every time you test to take into account the changes..
+docker-compose --profile dev up --build

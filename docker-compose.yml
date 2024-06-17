@@ -1,0 +1,51 @@
+# docker-compose.yml
+
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo
+    container_name: threat-intelligence-mongodb
+    ports:
+      - "27017:27017" # Opens the db to the host machine for external access.
+    volumes:
+      - ./data/mongo:/data/db
+    restart: no
+
+  alerts-ingestion-pipeline-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile.ingest-alerts
+      target: production
+    container_name: alerts-ingestion-pipeline-prod
+    depends_on:
+      - mongodb
+    environment:
+      PYTHONPATH: /usr/src/app
+      MONGO_HOST: mongodb
+      MONGO_PORT: 27017
+      MONGO_DB: threat_intelligence
+      MONGO_ALERTS_COLLECTION: alerts
+    volumes:
+      - .:/usr/src/app
+    restart: on-failure
+    profiles: ["prod"]
+
+  alerts-ingestion-pipeline-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.ingest-alerts
+      target: development
+    container_name: alerts-ingestion-pipeeline-dev
+    depends_on:
+      - mongodb
+    environment:
+      PYTHONPATH: /usr/src/app
+      MONGO_HOST: mongodb
+      MONGO_PORT: 27017
+      MONGO_DB: threat_intelligence
+      MONGO_ALERTS_COLLECTION: alerts
+    volumes:
+      - .:/usr/src/app
+    restart: on-failure
+    profiles: ["dev"]

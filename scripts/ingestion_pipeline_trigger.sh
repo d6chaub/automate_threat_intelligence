@@ -21,6 +21,11 @@ export PYTHONPATH=$PYTHONPATH:$PARENT_DIR
 pip-compile --output-file $PARENT_DIR/requirements.txt $PARENT_DIR/requirements.in
 pip install -r $PARENT_DIR/requirements.txt
 
+export MONGO_HOST=localhost
+export MONGO_PORT=27017
+export MONGO_DATABASE=threat_intelligence
+export MONGO_ALERTS_COLLECTION=alerts
+
 # Run the feedly pipeline
 python3 $SCRIPT_DIR/ingestion_pipeline.py $PARENT_DIR
 
