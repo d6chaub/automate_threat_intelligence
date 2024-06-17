@@ -2,13 +2,6 @@ repos:
   - repo: local
     hooks:
       # find out how to stop subsequent steps in the pipeline running if a prior step fails...
-      - id: update-requirements
-        name: Update requirements
-        entry: echo " **** for some reason the 'pre-commit-config.yaml' is running FINE when I run it with pre-commit run --all-files -v   but NOT when it's triggered with a git commit!!!!   FIND OUT WHY THIS IS THE CASE!!!!  **** "
-        language: system
-        pass_filenames: false
-        always_run: false
-        stages: [commit]
       - id: install-dependencies
         name: Install dependencies with poetry
         entry: poetry install
@@ -24,18 +17,4 @@ repos:
         types: [python]
         pass_filenames: false
         always_run: true #find out what happens when this is false
-        stages: [commit]
-      - id: update-requirements
-        name: Update requirements
-        entry: echo "hello - UNCOMMENT THIS WHEN I HAVE INTERNET" #pip-compile --upgrade --output-file requirements.txt requirements.in && git add requirements.txt
-        language: system
-        pass_filenames: false
-        always_run: false
-        stages: [commit]
-      - id: test-coverage
-        name: Calculate the amount of the codebase covered by unit-tests.
-        entry: echo "** Remember to download the module for test-coverage, add to dev-requirements.txt if not already there!! I actually think test coverage might be provided by defaultin when you run pytest, but check this... **"
-        language: system
-        pass_filenames: false
-        always_run: true
         stages: [commit]
