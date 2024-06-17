@@ -4,10 +4,10 @@ Script should be called by the 'ingestion_pipeline_trigger.sh' script in the sam
 import logging
 import os
 from pymongo import MongoClient
-from src.data_access.datastores import DataStoreFactory
-from src.data_access.datastores.alerts import MongoConfig, AlertsDAO
-from src.data_access.fetchers.feedly import FeedlyConfig
-from src.data_access.fetchers import FetcherFactory
+from data_access.datastores import DataStoreFactory
+from data_access.datastores.alerts import MongoConfig, AlertsDAO
+from data_access.fetchers.feedly import FeedlyConfig
+from data_access.fetchers import FetcherFactory
 
 logging.basicConfig(level=logging.INFO)
 

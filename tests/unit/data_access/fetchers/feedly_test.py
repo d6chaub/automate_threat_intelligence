@@ -1,10 +1,10 @@
 import json
 import pytest
 from unittest.mock import patch, MagicMock
-from src.data_access.fetchers.feedly import FeedlyConfig
-from src.data_access.fetchers import FetcherFactory
+from data_access.fetchers.feedly import FeedlyConfig
+from data_access.fetchers import FetcherFactory
 
-feedly_fetcher_module = 'src.data_access.fetchers.feedly.requests.get'
+feedly_fetcher_module = 'data_access.fetchers.feedly.requests.get'
 
 def load_mock_data():
     with open('tests/unit/data_access/mock_data/feedly_mock_data.json', 'r', encoding='utf-8') as file:

@@ -1,5 +1,0 @@
-# dev-requirements.in
-pip-tools
-pre-commit
-black
-pytest

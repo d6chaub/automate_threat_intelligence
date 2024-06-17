@@ -2,29 +2,35 @@
 FROM python:3.10.8 as base
 WORKDIR /usr/src/app
 
-# Copy the base requirements and install
-COPY ./requirements.txt /usr/src/app/requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Production stage
-FROM base as production
-# Ensure Python outputs all logs to the terminal without buffering
-ENV PYTHONUNBUFFERED=1
-COPY . /usr/src/app
-CMD ["python", "./ingestion_pipeline.py"]
-
-# Development/Testing stage
-FROM base as development
-ENV PYTHONUNBUFFERED=1
-RUN pip install --no-cache-dir pytest
-COPY . /usr/src/app
-
 # Copy certificates to avoid SSL issues when running locally with ZScaler
 COPY ./certs/shell.pem /usr/local/share/ca-certificates/root/shell.pem
 ENV SSL_CERT_FILE=/usr/local/share/ca-certificates/root/shell.pem
 ENV REQUESTS_CA_BUNDLE=/usr/local/share/ca-certificates/root/shell.pem
 RUN update-ca-certificates
 
+# Install Poetry
+RUN apt-get update && apt-get install -y curl
+RUN curl -sSL https://install.python-poetry.org | python3 -
+# Add Poetry to PATH
+ENV PATH="/root/.local/bin:$PATH"
+ENV POETRY_VIRTUALENVS_CREATE=false
 
+# First just install poetry dependencies as a separate layer to speed up builds
+COPY pyproject.toml poetry.lock ./
+
+# Production stage
+FROM base as production
+# Ensure Python outputs all logs to the terminal without buffering
+ENV PYTHONUNBUFFERED=1
+COPY . /usr/src/app
+RUN poetry install --no-dev
+CMD ["poetry", "run", "python3", "./ingestion_pipeline.py"]
+
+# Development/Testing stage
+FROM base as development
+ENV PYTHONUNBUFFERED=1
+COPY . /usr/src/app
+RUN poetry install
 # Command to run tests; adjust the path to test scripts as needed
-CMD pytest && python ./ingestion_pipeline.py
+CMD poetry run pytest && poetry run python3 ./ingestion_pipeline.py
+

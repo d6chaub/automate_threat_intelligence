@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "authomate_threat_intelligence"
+version = "0.1.0"
+description = "A Python package used for ingesting and processing threat intelligence data."
+authors = ["Yonah Citron <yonah.citron@shell.com>", "David Schaub <d.schaub@shell.com]"]
+packages = [
+    { include = "data_access", from = "src" }
+]
+
+[tool.poetry.dependencies]
+python = "3.10.8"
+pydantic-settings = "2.3.3"
+pydantic = "2.7.3"
+pymongo = "4.7.3"
+requests = "2.32.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "8.2.2"
+pytest-mock = "3.14.0"
+pip-tools = "*"
+pre-commit = "*"
+black = "*"
+mongomock = "4.1.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

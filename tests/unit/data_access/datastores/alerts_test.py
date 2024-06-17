@@ -1,6 +1,6 @@
 import json
 import pytest
-from src.data_access.datastores.alerts import MongoConfig, AlertsDAO
+from data_access.datastores.alerts import MongoConfig, AlertsDAO
 from mongomock import MongoClient
 
 # ToDo: Add unit tests for the other methods in the AlertsDAO class.

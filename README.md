@@ -148,3 +148,8 @@ it with tests prod does it without tests....
 
 # When doing it in dev I'd recommend building it every time you test to take into account the changes..
 docker-compose --profile dev up --build
+
+# Placeholder
+- Install poetry with:
+curl -sSL https://install.python-poetry.org | python3 -
+specify more details on this as well
