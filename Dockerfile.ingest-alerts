@@ -23,6 +23,7 @@ FROM base as production
 # Ensure Python outputs all logs to the terminal without buffering
 ENV PYTHONUNBUFFERED=1
 COPY . /usr/src/app
+RUN poetry lock
 RUN poetry install --no-dev
 CMD ["poetry", "run", "python3", "./ingestion_pipeline.py"]
 
@@ -30,6 +31,7 @@ CMD ["poetry", "run", "python3", "./ingestion_pipeline.py"]
 FROM base as development
 ENV PYTHONUNBUFFERED=1
 COPY . /usr/src/app
+RUN poetry lock
 RUN poetry install
 # Command to run tests; adjust the path to test scripts as needed
 CMD poetry run pytest && poetry run python3 ./ingestion_pipeline.py

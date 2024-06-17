@@ -17,7 +17,6 @@ requests = "2.32.3"
 [tool.poetry.dev-dependencies]
 pytest = "8.2.2"
 pytest-mock = "3.14.0"
-pip-tools = "*"
 pre-commit = "*"
 black = "*"
 mongomock = "4.1.2"

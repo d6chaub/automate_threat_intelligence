@@ -1,7 +1,17 @@
 repos:
   - repo: local
     hooks:
-      # find out how to stop subsequent steps in the pipeline running if a prior step fails...
+      # ToDo:
+      # - Find out how to stop subsequent steps in the pipeline running if a prior step fails...
+      # - Integrate linters e.g. Black into the pipeline
+      - id: update-lock
+        name: Update poetry lock
+        entry: poetry lock
+        language: system
+        types: [python]
+        pass_filenames: false
+        always_run: true 
+        stages: [commit]
       - id: install-dependencies
         name: Install dependencies with poetry
         entry: poetry install

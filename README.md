@@ -1,155 +1,76 @@
-# Threat Intelligence Automation
-## Purpose
-
-The initial repository is offered by feedly as a way to make custom feedly integrations via API.
-
-The goal of the threat intelligence automation project is to make an application that summarizes, contextualizes, and ranks security threat information from feedly. It will also write threats to azure devops as actionable items.
-
-Sure, here's a more organized version of the documentation, starting with the setup of development dependencies.
-
 # Developer Setup
+## Requirements
+Before setting up the project, ensure you have Docker and Docker Compose installed on your machine. These tools are crucial for running the development and production pipelines.
 
-## Development Dependencies
+Installing Docker: Visit Docker's official website for installation instructions.
+Installing Docker Compose: Follow the instructions on Docker's website to install Docker Compose.
 
-This project uses `pip-tools` to manage dependencies, `pre-commit` for git hooks, and `black` for code formatting. These tools and other development dependencies are listed in `dev-requirements.in`.
+## Configuring the Environment
+To run the application, specific directories and files must be set up. They are not in the repo since they contain sensitive files:
 
-### Installing Development Dependencies
+- Certificates Directory: Create a certs directory in the project root (this directory is already listed in .gitignore). You must place the shell.pem file in this directory. Download shell.pem here.
+- Configuration Directory: Create a config directory in the project root and add the alerts configuration file.
 
-To set up your development environment, install the development dependencies listed in `dev-requirements.txt`:
+# Running the Application
+## Development Pipeline
+To launch the development environment, use the following Docker Compose command:
 
-```sh
-pip install -r dev-requirements.txt
+```
+docker-compose --profile dev up --build
 ```
 
-**dev-requirements.in**:
+This pipeline runs the code as well as the unit tests, and other dev dependencies.
 
-```plaintext
-pip-tools
-pre-commit
-black
+## Production Pipeline
+For the production environment, use:
+
+```
+docker-compose --profile prod up --build
 ```
 
-Compile `dev-requirements.in` to `dev-requirements.txt` using `pip-compile`:
+This pipeline runs the code in a lighter environment without tests and dev dependencies.
 
-```sh
-pip-compile --output-file=dev-requirements.txt dev-requirements.in
+# Local Development with Poetry
+Poetry is a tool for dependency management and packaging in Python projects. It simplifies package management and virtual environment management.
+
+## Installing Poetry
+To install Poetry locally, execute the following command:
+
 ```
+curl -sSL https://install.python-poetry.org | python3 -
+```
+For more detailed instructions, visit the official Poetry documentation.
 
-## Python package 'pre-commit' for git hooks
+## Using Poetry for Local Development
+Once Poetry is installed, you can manage dependencies and virtual environments for your local development outside of Docker.
 
-To make developer workflow easier, the repo is configured to run git hooks upon commit which run unit tests and can perform other actions along the line.
+Adding Dependencies: To add libraries or packages as dependencies to your project, use the poetry add command.
 
-The hook specifications are contained in the `.pre-commit-config.yaml` in the root of the repo.
+Running the Project Locally:
+To work with the project code in src, run:
 
-To ensure the pre-commit hooks run on your local machine, install the development dependencies (as described above), then run:
+```
+poetry add --editable src
+```
+This configures the local environment to directly reflect changes made in the src directory.
 
-```sh
+# Development Dependencies
+## Pre-commit Hooks
+This project uses pre-commit hooks to automate certain tasks like running unit tests before each commit.
+
+## Installing Development Dependencies for the First Time
+To set up pre-commit hooks for the first time, first install the necessary dependencies:
+
+```
+poetry install
+``` 
+
+
+To activate the pre-commit hooks, run:
+
+```
 pre-commit install
 ```
 
-Any failing test will block the local commit.
-
-## Managing Dependencies with `requirements.in` and `requirements.txt`
-
-This project uses `pip-tools` to manage dependencies, ensuring a clear and reproducible environment.
-
-### How It Works
-
-1. **Direct Dependencies**: The `requirements.in` file lists top-level packages.
-2. **Compiled Dependencies**: The `requirements.txt` file is generated from `requirements.in` and includes all dependencies with their exact versions.
-
-### Benefits
-
-- **Clarity**: `requirements.in` contains only root dependencies.
-- **Reproducibility**: `requirements.txt` pins all dependencies, preventing issues from updates.
-
- **Conda Environment Alias**:
-
-   An alias `pip-install` can be defined in the `activate` script of your conda environment, calling `install_and_update_requirements.sh`.
-
-   **Alias Definition**:
-
-   The alias is added in the conda environment activation script, which is automatically executed when the environment is activated.
-
-   **Setup**:
-
-   - Find your conda environment activation script directory:
-
-     ```sh
-     mkdir -p $CONDA_PREFIX/etc/conda/activate.d
-     ```
-
-   - Create the activation script:
-
-     **$CONDA_PREFIX/etc/conda/activate.d/add_to_requirements.sh**:
-
-     ```sh
-     #!/bin/bash
-     alias pip-install="$PATH_TO_REPO/scripts/install_and_update_requirements.sh"
-     ```
-
-   - Make the script executable:
-
-     ```sh
-     chmod +x $CONDA_PREFIX/etc/conda/activate.d/add_to_requirements.sh
-     ```
-
-   **Usage**:
-
-   After activating your conda environment, use the `pip-install` alias to install packages and update dependencies:
-
-   ```sh
-   pip-install <package-name>
-   ```
-
-   This command will:
-   - Install the `requests` package.
-   - Add `requests` to `requirements.in` if it's not already there.
-
-
-
-### Pre-commit Hook
-
-The `requirements.txt` file is compiled from `requirements.in` using a pre-commit hook.
-
-
-# ToDo
-
-- Write some integration testing for the a local database initially.
-
-
-Add this??: Mention how it's a workaround for e.g. pytest and jupyter notebooks before I can properly install it as a package...
-
-```
-LOCAL_PATH_TO_REPO_ROOT=/Users/yonah.citron/repos/automate_threat_intelligence
-
-ACTIVATE_DIR=$CONDA_PREFIX/etc/conda/activate.d
-DEACTIVATE_DIR=$CONDA_PREFIX/etc/conda/deactivate.d
-
-mkdir -p $ACTIVATE_DIR
-mkdir -p $DEACTIVATE_DIR
-
-echo #!/bin/sh > $ACTIVATE_DIR/env_vars.sh
-echo "export OLD_PYTHONPATH=\"$PYTHONPATH\"" >> $ACTIVATE_DIR/env_vars.sh
-echo "export PYTHONPATH=\"$LOCAL_PATH_TO_REPO_ROOT:$PYTHONPATH\"" >> $ACTIVATE_DIR/env_vars.sh
-echo #!/bin/sh > $DEACTIVATE_DIR/unset_env_vars.sh
-echo "export PYTHONPATH=\"$OLD_PYTHONPATH\"" >> $DEACTIVATE_DIR/unset_env_vars.sh
-echo "unset OLD_PYTHONPATH" >> $DEACTIVATE_DIR/unset_env_vars.sh
-
-chmod +x $ACTIVATE_DIR/env_vars.sh
-chmod +x $DEACTIVATE_DIR/unset_env_vars.sh
-
-```
-
-Add documentation for using mongosh locally to connect to the docker mongo instance.
-
-add docuemntation for the commands and what the different environments do... dev does
-it with tests prod does it without tests....
-
-# When doing it in dev I'd recommend building it every time you test to take into account the changes..
-docker-compose --profile dev up --build
-
-# Placeholder
-- Install poetry with:
-curl -sSL https://install.python-poetry.org | python3 -
-specify more details on this as well
+## Committing Code
+If the pre-commit hooks find issues, they must be resolved before the commit can proceed. This ensures all commits meet the required standards.
