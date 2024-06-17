@@ -10,7 +10,7 @@ services:
       - "27017:27017" # Opens the db to the host machine for external access.
     volumes:
       - ./data/mongo:/data/db
-    restart: no
+    restart: "no"
 
   alerts-ingestion-pipeline-prod:
     build:
@@ -28,7 +28,7 @@ services:
       MONGO_ALERTS_COLLECTION: alerts
     volumes:
       - .:/usr/src/app
-    restart: no
+    restart: "no"
     profiles: ["prod"]
 
   alerts-ingestion-pipeline-dev:
@@ -47,5 +47,5 @@ services:
       MONGO_ALERTS_COLLECTION: alerts
     volumes:
       - .:/usr/src/app
-    restart: no
+    restart: "no"
     profiles: ["dev"]

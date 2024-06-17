@@ -8,12 +8,16 @@ Installing Docker Compose: Follow the instructions on Docker's website to instal
 ## Configuring the Environment
 To run the application, specific directories and files must be set up. They are not in the repo since they contain sensitive files:
 
-- Certificates Directory: Create a certs directory in the project root (this directory is already listed in .gitignore). You must place the shell.pem file in this directory. Download shell.pem here.
-- Configuration Directory: Create a config directory in the project root and add the alerts configuration file.
+- Certificates Directory: Create a `certs` directory in the project root (this directory is already listed in .gitignore). You must place the shell.pem file in this directory. Download shell.pem here.
+
+- Configuration Directory: Create a `config` directory in the project root and add the alerts configuration file.
 
 # Running the Application
+
+Running the pipeline in either environment will start the MongoDB in a Docker container, and then run the pipeline in a second Docker container. Once the pipeline has run, the shell will by default stay connected to the MongoDB docker container and record logs, so you know it's running. If you kill the process, the MongoDB will cease to run. To conne
+
 ## Development Pipeline
-To launch the development environment, use the following Docker Compose command:
+To run the pipeline in the development environment, use the following Docker Compose command:
 
 ```
 docker-compose --profile dev up --build
