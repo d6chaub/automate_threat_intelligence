@@ -21,7 +21,7 @@ class DataStoreFactory:
     """
 
     @staticmethod
-    def get_config(datastore: str):
+    def load_configs(datastore: str):
         """
         Get the configuration for the specified data store using environment variables.
 

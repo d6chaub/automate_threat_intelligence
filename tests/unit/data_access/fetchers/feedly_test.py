@@ -12,7 +12,7 @@ def load_mock_data():
 
 @pytest.fixture
 def feedly_client():
-    config: FeedlyConfig = FetcherFactory.load_config('config/local/feedly_config.json', 'Feedly')
+    config: FeedlyConfig = FetcherFactory.load_configs('config/local/feedly_config.json', 'Feedly')
     client = FetcherFactory.get_fetcher(config)
     mock_data = load_mock_data()
     stream_count = len(config.stream_feed_mappings)

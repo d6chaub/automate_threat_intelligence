@@ -14,7 +14,7 @@ logging.basicConfig(level=logging.INFO)
 config_dir = 'config'
 
 # Initialize Feedly Data Access Object.
-config: FeedlyConfig = FetcherFactory.load_config(
+config: FeedlyConfig = FetcherFactory.load_configs(
     os.path.join(config_dir, 'local', 'feedly_config.json'),
     'Feedly'
 )
@@ -24,9 +24,7 @@ feedly_fetcher = FetcherFactory.get_fetcher(config)
 all_articles: dict = feedly_fetcher.fetch_alerts()
 
 # Configure the MongoDB Data Access Object.
-config: MongoConfig = DataStoreFactory.load_config(
-    os.path.join(config_dir, "mongo_config.json"), "MongoDB"
-)
+config: MongoConfig = DataStoreFactory.load_configs("MongoDB")
 client = MongoClient(config.host, config.port)
 alerts_datastore = AlertsDAO(config, client)
 

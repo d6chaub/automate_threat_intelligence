@@ -30,7 +30,7 @@ class FetcherFactory:
     """
 
     @staticmethod
-    def load_config(config_path: str, data_source: str):
+    def load_configs(config_path: str, data_source: str):
         """
         Load the configuration for the specified data source from the given path.
 

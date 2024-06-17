@@ -18,5 +18,13 @@ FROM base as development
 ENV PYTHONUNBUFFERED=1
 RUN pip install --no-cache-dir pytest
 COPY . /usr/src/app
+
+# Copy certificates to avoid SSL issues when running locally with ZScaler
+COPY ./certs/shell.pem /usr/local/share/ca-certificates/root/shell.pem
+ENV SSL_CERT_FILE=/usr/local/share/ca-certificates/root/shell.pem
+ENV REQUESTS_CA_BUNDLE=/usr/local/share/ca-certificates/root/shell.pem
+RUN update-ca-certificates
+
+
 # Command to run tests; adjust the path to test scripts as needed
 CMD pytest && python ./ingestion_pipeline.py

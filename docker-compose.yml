@@ -28,7 +28,7 @@ services:
       MONGO_ALERTS_COLLECTION: alerts
     volumes:
       - .:/usr/src/app
-    restart: on-failure
+    restart: no
     profiles: ["prod"]
 
   alerts-ingestion-pipeline-dev:
@@ -47,5 +47,5 @@ services:
       MONGO_ALERTS_COLLECTION: alerts
     volumes:
       - .:/usr/src/app
-    restart: on-failure
+    restart: no
     profiles: ["dev"]
