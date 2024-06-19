@@ -26,8 +26,6 @@ services:
       MONGO_PORT: 27017
       MONGO_DB: threat_intelligence
       MONGO_ALERTS_COLLECTION: alerts
-    volumes:
-      - .:/usr/src/app
     restart: "no"
     profiles: ["prod"]
 
@@ -45,7 +43,5 @@ services:
       MONGO_PORT: 27017
       MONGO_DB: threat_intelligence
       MONGO_ALERTS_COLLECTION: alerts
-    volumes:
-      - .:/usr/src/app
     restart: "no"
     profiles: ["dev"]

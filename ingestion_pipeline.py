@@ -35,6 +35,9 @@ if inserted_ids:
 
     alerts_already_present = len(all_articles) - len(inserted_ids)
     if alerts_already_present:
-        logging.info("%s alerts not added to the mongo as already present in the database.", {len(inserted_ids)})
+        logging.debug(
+            "%s alerts not added to the mongo as already present in the database.",
+            {len(all_articles) - len(inserted_ids)}
+        )
 else:
     logging.info("No new alerts to insert to the mongo database.")
