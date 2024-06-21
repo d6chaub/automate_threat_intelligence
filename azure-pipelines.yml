@@ -1,0 +1,29 @@
+#trigger:
+#  branches:
+#    include:
+#    - develop
+#    - main
+
+variables:
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/develop') }}:
+    subscriptionId: 'a3c531dd-409f-4d4a-b076-0e2020958b66'
+    resourceGroup: 'Threat-Intelligence-Automation'
+    environment: 'dev'
+  ${{ if eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
+    subscriptionId: 'PLACEHOLDER'
+    resourceGroup: 'PLACEHOLDER'
+    environment: 'prod'
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- script: |
+    ./infra/provision-infra.sh \
+      --subscription-id "$(subscriptionId)" \
+      --resource-group "$(resourceGroup)" \
+      --target-deployment-environment "$(environment)"
+  displayName: 'Provision Infrastructure'
+  
+# Next steps:
+# - Deploy different pipelines and applications.

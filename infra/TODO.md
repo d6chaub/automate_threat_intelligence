@@ -32,3 +32,8 @@ stages:
     - script: |
         az deployment group validate --resource-group myResourceGroup --template-file main.json --parameters @my.parameters.json
       displayName: 'Validate ARM Template'
+
+
+SUBSCRIPTION_ID="a3c531dd-409f-4d4a-b076-0e2020958b66"
+RESOURCE_GROUP="Threat-Intelligence-Automation"
+TARGET_DEPLOYMENT_ENVIRONMENT="dev"
