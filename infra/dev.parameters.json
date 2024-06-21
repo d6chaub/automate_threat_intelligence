@@ -1,0 +1,24 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+
+
+    "parameters": {
+
+      "resourceEnvironmentPrefix": {
+        "value": "devtia00"
+      },
+
+      "defaultTags": {
+        "value": {
+          "Project": "Threat-Intelligence-Automation",
+          "Environment": "dev",
+          "Owners": "yonah.citron@shell.com, d.schaub@shell.com"
+        }
+
+    }
+
+
+    }
+  }
+  
