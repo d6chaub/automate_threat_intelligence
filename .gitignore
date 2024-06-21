@@ -5,6 +5,7 @@ python/article_data.csv
 *.code-workspace
 venv
 config.ini
+.coverage
 
 # Cache Folders.
 __pycache__/

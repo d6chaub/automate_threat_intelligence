@@ -1,26 +1,24 @@
 import logging
 from pymongo import MongoClient
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # ToDo: Add type hints to the methods in the AlertsDAO class.
-
 class MongoConfig(BaseSettings):
     """
     Configuration for connecting to a MongoDB database using environment variables.
 
     Attributes:
+        model_config (SettingsConfigDict): Configuration for the MongoDB connection.
         host (str): The host address of the MongoDB server.
         port (int): The port number on which the MongoDB server is listening.
         database (str): The name of the database to connect to.
         alerts_collection (str): The name of the collection to use for alerts.
     """
-    host: str = "localhost"  # Default values can be overridden by env vars
-    port: int = 27017
-    database: str = "default_database"
-    alerts_collection: str = "alerts"
-
-    class Config:
-        env_prefix = 'MONGO_'  # Prefixes all environment variables with `MONGO_
+    model_config: SettingsConfigDict = SettingsConfigDict(env_prefix='MONGO_')
+    host: str # = "localhost"  # Default values can be overridden by env vars
+    port: int # = 27017
+    database: str # = "default_database"
+    alerts_collection: str # = "alerts"
 
 class AlertsDAO:
     """
@@ -40,23 +38,38 @@ class AlertsDAO:
         self.db = self.client[config.database]
         self.collection = self.db[config.alerts_collection]
 
-    def add_alert(self, alert: dict):
+    def _add_alert(self, alert: dict): # pragma: no cover
         return self.collection.insert_one(alert).inserted_id
-    
-    def add_alerts(self, alerts: list[dict]):
-        return self.collection.insert_many(alerts).inserted_ids
 
     # ToDo: Add debug logging for whether an alert is already present in the database.
     # Do this for the add_alerts_if_not_exist method also.
     def add_alert_if_not_exists(self, alert: dict):
+        """
+        Adds an alert to the collection only if it does not already exist.
+        
+        Args:
+            alert (dict): The alert data to be added.
+        
+        Returns:
+            The identifier of the inserted alert, or None if the alert already exists.
+        """
 
         def _origin_id_already_present(origin_id):
             return bool(self.collection.find_one({"originId": origin_id}))
 
         if not _origin_id_already_present(alert["originId"]):
-            return self.add_alert(alert)
+            return self._add_alert(alert)
         
     def add_alerts_if_not_exist(self, alerts: list[dict]) -> list[int]:
+        """
+        Adds multiple alerts to the collection only if they do not already exist.
+
+        Args:
+            alerts (list[dict]): A list of alert data to be added.
+
+        Returns:
+            A list of identifiers for the inserted alerts.
+        """
         inserted_ids = []
         for alert in alerts:
             inserted_id = self.add_alert_if_not_exists(alert)
@@ -98,7 +111,8 @@ class AlertsDAO:
         """
         return list(self.collection.find())
     
-    def debug_list_all_dbs_and_collections(self):
+    # Method for debugging. Not for production use, no need to test.
+    def debug_list_all_dbs_and_collections(self): # pragma: no cover
         """
         Debug method to list all databases and collections in the MongoDB instance.
         """

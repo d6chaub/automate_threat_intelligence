@@ -8,6 +8,7 @@ from .alerts import AlertsDAO, MongoConfig
 DATASTORE_MAP = {
     "MongoDB": {
         "config": MongoConfig,
+        "DAO": AlertsDAO
     }
     # Add other data stores here
 }
@@ -43,15 +44,16 @@ class DataStoreFactory:
         try:
             config = config_class()  # Automatically loads environment variables
             logging.info("%s configuration loaded successfully.", datastore)
-            logging.debug("%s configuration: %s", datastore, config.json())
+            logging.debug("%s configuration: %s", datastore, config.model_dump_json())
         except ValidationError as e:
             logging.error("Configuration validation error for %s: %s", datastore, e)
             raise
 
         return config
 
+    # Currently this method isn't being used!
     @staticmethod
-    def get_dao(config: BaseModel, client: MongoClient):
+    def get_dao(config: BaseModel, client: MongoConfig): # Add more types for type-checking if more datastores are added.
         """
         Initialize and return the DAO based on the provided configuration.
 

@@ -6,3 +6,4 @@
 - Read up more on pytest fixtures, how many times they're run on a class / when applied to separate functions, etc.
 - Install 
 - Think about testing in docker image... make a test docker environment that installs pytest and runs the tests? Make it a multi-stage build, and the prod environment doesn't have that..
+- Consider whether to use the .get_dao method at all, or just hard-code the MongoClient. Might be simpler. Think about it. For now I'm only using the .get_dao method in the tests.
