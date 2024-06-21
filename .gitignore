@@ -16,3 +16,6 @@ local/
 config/local
 notebooks/local
 certs/
+
+# Bicepparam compiled artifact.
+dev.params.json

@@ -23,3 +23,6 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-02-01' = {
   }
   tags: tags
 }
+
+// Outputs.
+output keyVaultName string = keyVault.name
