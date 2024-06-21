@@ -1,80 +1,71 @@
-# Developer Setup
-## Requirements
-Before setting up the project, ensure you have Docker and Docker Compose installed on your machine. These tools are crucial for running the development and production pipelines.
+# Project Setup and Management Guide
 
-Installing Docker: Visit Docker's official website for installation instructions.
-Installing Docker Compose: Follow the instructions on Docker's website to install Docker Compose.
+## Developer Setup
+### Requirements
+Ensure Docker and Docker Compose are installed to handle both development and production pipelines.
+- **Docker**: [Installation instructions](https://www.docker.com/get-started)
+- **Docker Compose**: [Installation instructions](https://docs.docker.com/compose/install/)
+### Configuring the Environment
+Set up necessary directories and sensitive files not tracked in the repository:
+- **Certificates Directory**: Create a `certs` directory at the project root and add the `shell.pem` file. This directory is included in `.gitignore`.
+- **Configuration Directory**: Create a `config` directory at the project root for configuration files.
 
-## Configuring the Environment
-To run the application, specific directories and files must be set up. They are not in the repo since they contain sensitive files:
 
-- Certificates Directory: Create a `certs` directory in the project root (this directory is already listed in .gitignore). You must place the shell.pem file in this directory. Download shell.pem here.
-
-- Configuration Directory: Create a `config` directory in the project root and add the alerts configuration file.
-
-# Running the Application
-
-Running the pipeline in either environment will start the MongoDB in a Docker container, and then run the pipeline in a second Docker container. Once the pipeline has run, the shell will by default stay connected to the MongoDB docker container and record logs, so you know it's running. If you kill the process, the MongoDB will cease to run. To conne
-
-## Development Pipeline
-To run the pipeline in the development environment, use the following Docker Compose command:
-
-```
+## Running the Application
+### Development Pipeline
+Run the development environment with:
+```bash
 docker-compose --profile dev up --build
 ```
-
-This pipeline runs the code as well as the unit tests, and other dev dependencies.
-
-## Production Pipeline
-For the production environment, use:
-
-```
+This setup includes unit tests and development dependencies.
+### Production Pipeline
+Run the production environment with:
+```bash
 docker-compose --profile prod up --build
 ```
+This setup focuses on running the application in a lighter environment without development-specific tools.
 
-This pipeline runs the code in a lighter environment without tests and dev dependencies.
 
-# Local Development with Poetry
-Poetry is a tool for dependency management and packaging in Python projects. It simplifies package management and virtual environment management.
-
-## Installing Poetry
-To install Poetry locally, execute the following command:
-
-```
+## Local Development with Poetry
+### Installing Poetry
+Install Poetry for Python dependency management:
+```bash
 curl -sSL https://install.python-poetry.org | python3 -
 ```
-For more detailed instructions, visit the official Poetry documentation.
-
-## Using Poetry for Local Development
-Once Poetry is installed, you can manage dependencies and virtual environments for your local development outside of Docker.
-
-Adding Dependencies: To add libraries or packages as dependencies to your project, use the poetry add command.
-
-Running the Project Locally:
-To work with the project code in src, run:
-
-```
+### Managing the Project with Poetry
+Use Poetry to add dependencies and manage the local Python environment:
+```bash
 poetry add --editable src
 ```
-This configures the local environment to directly reflect changes made in the src directory.
 
-# Development Dependencies
-## Pre-commit Hooks
-This project uses pre-commit hooks to automate certain tasks like running unit tests before each commit.
 
-## Installing Development Dependencies for the First Time
-To set up pre-commit hooks for the first time, first install the necessary dependencies:
-
-```
+## Development Dependencies
+### Pre-commit Hooks
+Automate tasks like linting and tests before each commit.
+```bash
 poetry install
-``` 
-
-
-To activate the pre-commit hooks, run:
-
-```
 pre-commit install
 ```
 
-## Committing Code
-If the pre-commit hooks find issues, they must be resolved before the commit can proceed. This ensures all commits meet the required standards.
+
+## CI/CD and Environment Lifecycle Management
+### Trunk-based Development Overview
+Trunk-based Development (TBD) involves direct commits to a single main branch, facilitating rapid integration and deployment cycles, ideal for lean teams.
+### CI/CD Pipeline Configuration
+The pipeline supports automated deployments:
+Development: Commits to main trigger deployments to a development environment.
+Production: Controlled deployments via Git tags.
+### Triggering a Production Deployment
+#### Step-by-Step Production Deployment
+1. Identify the Commit:
+Use git log to find the commit hash.
+```bash
+git log --pretty=format:"%h - %s" -n 10
+```
+2. Tag the Commit:
+Tag using the format prod-release-YYYYMMDD with detailed release notes.
+```bash
+git tag -a prod-release-YYYYMMDD <commit-hash> -m "Detailed release notes here"
+git push origin prod-release-YYYYMMDD
+```
+This triggers the CI/CD pipeline for a controlled deployment to production.
