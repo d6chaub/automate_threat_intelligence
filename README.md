@@ -21,7 +21,7 @@ This setup includes unit tests and development dependencies.
 ### Production Pipeline
 Run the production environment with:
 ```bash
-docker-compose --profile prod up --build
+docker-compose --profile prod up
 ```
 This setup focuses on running the application in a lighter environment without development-specific tools.
 
