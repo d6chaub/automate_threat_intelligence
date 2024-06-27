@@ -4,6 +4,16 @@ repos:
       # ToDo:
       # - Find out how to stop subsequent steps in the pipeline running if a prior step fails...
       # - Integrate linters e.g. Black into the pipeline
+
+      # ToDo: Find out why the sort-imports hook is not working, and fix.
+      #- id: sort-imports
+      #  name: Sort imports with isort
+      #  entry: poetry run isort .
+      #  language: system
+      #  types: [python]
+      #  pass_filenames: false
+      #  always_run: true
+      #  stages: [commit]
       - id: update-lock
         name: Update poetry lock
         entry: poetry lock

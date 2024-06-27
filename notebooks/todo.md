@@ -7,3 +7,8 @@
 - Install 
 - Think about testing in docker image... make a test docker environment that installs pytest and runs the tests? Make it a multi-stage build, and the prod environment doesn't have that..
 - Consider whether to use the .get_dao method at all, or just hard-code the MongoClient. Might be simpler. Think about it. For now I'm only using the .get_dao method in the tests.
+
+
+
+- For local dev set up the environment right so the parser works properly.
+- use something like mypy and configure with ci/cd and pre-commits to make static type-checking better...

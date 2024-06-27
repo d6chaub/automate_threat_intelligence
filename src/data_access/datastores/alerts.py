@@ -1,6 +1,9 @@
 import logging
-from pymongo import MongoClient
+
+from pydantic import constr
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pymongo import MongoClient
+
 
 # ToDo: Add type hints to the methods in the AlertsDAO class.
 class MongoConfig(BaseSettings):
@@ -14,11 +17,11 @@ class MongoConfig(BaseSettings):
         database (str): The name of the database to connect to.
         alerts_collection (str): The name of the collection to use for alerts.
     """
-    model_config: SettingsConfigDict = SettingsConfigDict(env_prefix='MONGO_')
-    host: str # = "localhost"  # Default values can be overridden by env vars
-    port: int # = 27017
-    database: str # = "default_database"
-    alerts_collection: str # = "alerts"
+    model_config: SettingsConfigDict = SettingsConfigDict(env_prefix="MONGO_")
+    host: constr(min_length=1)
+    port: int
+    database: constr(min_length=1)
+    alerts_collection: constr(min_length=1)
 
 class AlertsDAO:
     """

@@ -1,0 +1,11 @@
+data_sources:
+  Feedly:
+    access_token: "abababab"
+    stream_feed_mappings:
+      - feed_name: "AI Feeds"
+        stream_id: "cdcdcdcd"
+      - feed_name: "CERTs"
+        stream_id: "efefefef"
+    article_count: 100
+    fetch_all: "True"
+    hours_ago: 24

@@ -18,5 +18,8 @@ config/local
 notebooks/local
 certs/
 
+# Sensitive config files.
+config/alerts_sources.yaml
+
 # Bicepparam compiled artifact.
 dev.params.json

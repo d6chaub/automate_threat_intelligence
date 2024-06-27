@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+
 class DataFetcher(ABC):
     """
     Abstract base class to define the interface for data fetching.

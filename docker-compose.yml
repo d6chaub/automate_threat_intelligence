@@ -24,7 +24,7 @@ services:
       PYTHONPATH: /usr/src/app
       MONGO_HOST: mongodb
       MONGO_PORT: 27017
-      MONGO_DB: threat_intelligence
+      MONGO_DATABASE: threat_intelligence
       MONGO_ALERTS_COLLECTION: alerts
     restart: "no"
     profiles: ["prod"]
@@ -41,7 +41,7 @@ services:
       PYTHONPATH: /usr/src/app
       MONGO_HOST: mongodb
       MONGO_PORT: 27017
-      MONGO_DB: threat_intelligence
+      MONGO_DATABASE: threat_intelligence
       MONGO_ALERTS_COLLECTION: alerts
     restart: "no"
     profiles: ["dev"]

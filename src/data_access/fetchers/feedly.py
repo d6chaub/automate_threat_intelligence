@@ -1,13 +1,15 @@
-import logging
-import requests
 import json
-from pydantic import BaseModel
+import logging
+
+import requests
+from pydantic import BaseModel, constr
+
 from .abstract import DataFetcher
 
 logging.basicConfig(level=logging.INFO)
 
 # ToDo: Add documentation properly:
-#token (str): Personal Access Token for authenticating with the Feedly API.
+#access_token (str): Personal Access Token for authenticating with the Feedly API.
 #streams (list[str]): List of stream IDs from which to fetch feeds.
 #article_count (int): Number of articles to fetch from each stream.
 #url (str): URL to the Feedly API.
@@ -17,17 +19,19 @@ class FeedlyConfig(BaseModel):
     Configuration for connecting to the Feedly API.
 
     Attributes:
-        token (str): Personal Access Token for authenticating with the Feedly API.
+        access_token (str): Personal Access Token for authenticating with the Feedly API.
         stream_feed_mappings (list[dict]): List of dictionaries, each containing a stream ID and the name of the feed associated with it.
         article_count (int): Number of articles to fetch from each stream.
         fetch_all (bool): If True, continue fetching until no more articles are available.
         hours_ago (int): Unix timestamp to fetch articles newer than this time. None to ignore.
     """
-    token: str
+    access_token: constr(min_length=1)
     stream_feed_mappings: list[dict]
     article_count: int
     fetch_all: bool
     hours_ago: int
+    def __init__(self, access_token, stream_feed_mappings, article_count, fetch_all, hours_ago):
+        super().__init__(access_token=access_token, stream_feed_mappings=stream_feed_mappings, article_count=article_count, fetch_all=fetch_all, hours_ago=hours_ago)
 
 
 class FeedlyDAO(DataFetcher):
@@ -42,13 +46,13 @@ class FeedlyDAO(DataFetcher):
         
         """
         # Unpack the config object.
-        self.token = config.token
+        self.access_token = config.access_token
         self.stream_feed_mappings = config.stream_feed_mappings
         self.article_count = config.article_count
         self.fetch_all = config.fetch_all
         self.hours_ago = config.hours_ago
 
-        self.headers: dict = {'Authorization': f'Bearer {self.token}'}
+        self.headers: dict = {'Authorization': f'Bearer {self.access_token}'}
 
     def fetch_alerts(self) -> dict:
         """
