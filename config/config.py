@@ -3,8 +3,8 @@ import os
 
 import yaml
 
-from data_access.fetchers.feedly import FeedlyConfig
 from data_access.datastores.alerts import MongoConfig
+from data_access.fetchers.feedly import FeedlyConfig
 
 DATA_FETCHERS_CONFIG_CLASS_MAP = {
     "Feedly": FeedlyConfig,

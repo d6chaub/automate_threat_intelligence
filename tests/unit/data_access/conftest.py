@@ -5,6 +5,7 @@ from dotenv import dotenv_values
 
 from config.config import ConfigManager
 
+
 @pytest.fixture(scope="module")
 def mock_feedly_data():
     """Load mock alert data from a JSON file."""

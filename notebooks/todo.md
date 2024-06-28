@@ -12,3 +12,8 @@
 
 - For local dev set up the environment right so the parser works properly.
 - use something like mypy and configure with ci/cd and pre-commits to make static type-checking better...
+
+
+# Next:
+
+- Sort out the bicep files with Mike... find the 'existing' ones...

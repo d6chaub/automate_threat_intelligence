@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 from .abstract import DataFetcher
 from .feedly import FeedlyConfig, FeedlyDAO
+
 # ToDo: Do better type-hinting for the data_source_config param etc.
 # ToDo: Add better documentation explaining the purpose of this class,
 # and how it can be used to initialize different fetcher clients in a

@@ -1,10 +1,10 @@
-import pytest
 import pydantic_core._pydantic_core as _pydantic_core
+import pytest
+from pydantic import BaseModel
 
 from config.config import ConfigManager
 from data_access.fetchers import FetcherFactory
 from data_access.fetchers.feedly import FeedlyConfig, FeedlyDAO
-from pydantic import BaseModel
 
 # TODO: [2024-06-05, yonahcitron] Add test case for when passing multiple stream_ids.
 # TODO: [2024-06-27, yonahcitron] Add lots more test cases for EACH of the methods in the FeedlyDAO class. Currently not many of them.
