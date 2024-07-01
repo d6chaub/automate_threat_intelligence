@@ -69,3 +69,7 @@ git tag -a prod-release-YYYYMMDD <commit-hash> -m "Detailed release notes here"
 git push origin prod-release-YYYYMMDD
 ```
 This triggers the CI/CD pipeline for a controlled deployment to production.
+
+
+# As part of the deployment to azure functions, I need to append to the sys.path for imports,
+# and I also need to run poetry to generate the requirements.txt

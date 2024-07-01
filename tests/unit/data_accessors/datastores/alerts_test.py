@@ -7,8 +7,8 @@ import pytest
 from mongomock import MongoClient
 from pydantic_settings import BaseSettings
 
-from config.config import ConfigManager
-from data_access.datastores.alerts import AlertsDAO, MongoConfig
+from data_accessors.config import ConfigManager
+from data_accessors.datastores.alerts import AlertsDAO, MongoConfig
 
 # ToDo: Add unit tests for the other methods in the AlertsDAO class.
 #       e.g. .add_alert_if_not_exists etc
@@ -33,7 +33,7 @@ def mock_alerts_dao(mock_mongo_config, mock_mongo_client):
     """Provides an AlertsDAO object with a mongomock MongoClient, setup once per class."""
     return AlertsDAO(config=mock_mongo_config, client=mock_mongo_client)
 
-# ToDo: Make the MongoConfig class raise an error if any of the values are empty...
+
 class TestMongoConfig:
     def test_mongo_config_initialization_valid_params(self, mock_mongo_config):
         """Test loading valid configuration using environment variables."""
@@ -54,7 +54,7 @@ class TestMongoConfig:
         expected_error_message = "Input should be a valid integer, unable to parse string as an integer"
         with pytest.raises(_pydantic_core.ValidationError) as exc_info:
             config_manager = ConfigManager(
-                'tests/unit/data_access/config/mock_alerts_sources.yaml'
+                'tests/unit/data_accessors/config/mock_alerts_sources.yaml'
             )
         assert expected_error_message in str(exc_info.value)
         ConfigManager.reset()
@@ -70,7 +70,7 @@ class TestMongoConfig:
         expected_error_message = "String should have at least 1 character"
         with pytest.raises(_pydantic_core.ValidationError) as exc_info:
             config_manager = ConfigManager(
-                'tests/unit/data_access/config/mock_alerts_sources.yaml'
+                'tests/unit/data_accessors/config/mock_alerts_sources.yaml'
             )
         assert expected_error_message in str(exc_info.value)
         ConfigManager.reset()

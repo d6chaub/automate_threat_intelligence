@@ -1,7 +1,7 @@
 import pytest
 
-from config.config import ConfigManager
-from data_access.datastores.alerts import MongoConfig
+from data_accessors.config import ConfigManager
+from data_accessors.datastores.alerts import MongoConfig
 
 
 class TestConfigManager: # mock_config_manager is a fixture from conftest.py

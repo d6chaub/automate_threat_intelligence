@@ -2,7 +2,9 @@ import json
 import logging
 
 import requests
-from pydantic import BaseModel, constr
+from pydantic import constr, validator
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
 
 from .abstract import DataFetcher
 
@@ -14,25 +16,44 @@ logging.basicConfig(level=logging.INFO)
 #article_count (int): Number of articles to fetch from each stream.
 #url (str): URL to the Feedly API.
 #headers (dict): Headers to be included in the request to the Feedly API.
-class FeedlyConfig(BaseModel):
+class FeedlyConfig(BaseSettings):
     """
     Configuration for connecting to the Feedly API.
 
     Attributes:
+        model_config (SettingsConfigDict): Environment variable format for the configuration.
         access_token (str): Personal Access Token for authenticating with the Feedly API.
         stream_feed_mappings (list[dict]): List of dictionaries, each containing a stream ID and the name of the feed associated with it.
         article_count (int): Number of articles to fetch from each stream.
         fetch_all (bool): If True, continue fetching until no more articles are available.
         hours_ago (int): Unix timestamp to fetch articles newer than this time. None to ignore.
     """
-    access_token: constr(min_length=1)
-    stream_feed_mappings: list[dict]
+    model_config: SettingsConfigDict = SettingsConfigDict(env_prefix="FEEDLY_")
+    access_token: constr(min_length=6)
+    stream_feed_mappings: list[dict] # As a json string
     article_count: int
     fetch_all: bool
     hours_ago: int
-    def __init__(self, access_token, stream_feed_mappings, article_count, fetch_all, hours_ago):
-        super().__init__(access_token=access_token, stream_feed_mappings=stream_feed_mappings, article_count=article_count, fetch_all=fetch_all, hours_ago=hours_ago)
 
+    @validator('stream_feed_mappings', pre=True, always=True)
+    def parse_json_to_list(cls, v):
+        if isinstance(v, str):
+            try:
+                parsed = json.loads(v)
+                # Check that it's a list
+                if not isinstance(parsed, list):
+                    raise ValueError('stream_feed_mappings must be a list')
+                # Check each item in the list
+                for item in parsed:
+                    if not isinstance(item, dict):
+                        raise ValueError('Each item in stream_feed_mappings must be a dictionary')
+                    required_keys = {'feed_name', 'stream_id'}
+                    if not required_keys.issubset(item.keys()):
+                        raise ValueError(f"Each dictionary must contain the keys: {required_keys}")
+                return parsed
+            except json.JSONDecodeError:
+                raise ValueError('Invalid JSON format for stream_feed_mappings')
+        return v
 
 class FeedlyDAO(DataFetcher):
     """Concrete implementation of DataFetcher to fetch data from Feedly."""

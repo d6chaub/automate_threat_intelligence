@@ -11,14 +11,14 @@ class MongoConfig(BaseSettings):
     Configuration for connecting to a MongoDB database using environment variables.
 
     Attributes:
-        model_config (SettingsConfigDict): Configuration for the MongoDB connection.
+        model_config (SettingsConfigDict): Environment variable format for the configuration.
         host (str): The host address of the MongoDB server.
         port (int): The port number on which the MongoDB server is listening.
         database (str): The name of the database to connect to.
         alerts_collection (str): The name of the collection to use for alerts.
     """
     model_config: SettingsConfigDict = SettingsConfigDict(env_prefix="MONGO_")
-    host: constr(min_length=1)
+    host: constr(min_length=5)
     port: int
     database: constr(min_length=1)
     alerts_collection: constr(min_length=1)

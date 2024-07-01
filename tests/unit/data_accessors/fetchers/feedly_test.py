@@ -2,14 +2,10 @@ import pydantic_core._pydantic_core as _pydantic_core
 import pytest
 from pydantic import BaseModel
 
-from config.config import ConfigManager
-from data_access.fetchers import FetcherFactory
-from data_access.fetchers.feedly import FeedlyConfig, FeedlyDAO
+from data_accessors.config import ConfigManager
+from data_accessors.fetchers import FetcherFactory
+from data_accessors.fetchers.feedly import FeedlyConfig, FeedlyDAO
 
-# TODO: [2024-06-05, yonahcitron] Add test case for when passing multiple stream_ids.
-# TODO: [2024-06-27, yonahcitron] Add lots more test cases for EACH of the methods in the FeedlyDAO class. Currently not many of them.
-
-# Setup necessary classes and pytest fixtures for testing.
 
 class UnsupportedConfig(BaseModel):
     """A mock configuration class that is not supported by FetcherFactory."""
@@ -27,10 +23,6 @@ def mock_feedly_dao(mock_feedly_config):
     return FetcherFactory.create_connection(mock_feedly_config)
 
 
-# Test classes.
-
-# ToDo: Make pydantic validation of all the config settings in more detail.
-# ToDo: Then do more unit tests for these...
 class TestFeedlyConfig:
     def test_feedly_config_initialization_valid_params(self, mock_feedly_config):
         """Test loading valid configuration the yaml file."""
@@ -52,7 +44,7 @@ class TestFeedlyConfig:
         ConfigManager.reset() # Singleton reset before and after to avoid state leakage.
         expected_error_message = "Input should be a valid integer, unable to parse string as an integer"
         with pytest.raises(_pydantic_core.ValidationError) as exc_info:
-            config_manager = ConfigManager('tests/unit/data_access/config/mock_alerts_sources_invalid_article_count.yaml')
+            config_manager = ConfigManager('tests/unit/data_accessors/config/mock_alerts_sources_invalid_article_count.yaml')
         assert expected_error_message in str(exc_info.value)
 
     def test_feedly_config_initialization_invalid_access_token(self, load_env_vars):
@@ -65,7 +57,7 @@ class TestFeedlyConfig:
         ConfigManager.reset() # Singleton reset before and after to avoid state leakage.
         expected_error_message = "String should have at least 1 character"
         with pytest.raises(_pydantic_core.ValidationError) as exc_info:
-            config_manager = ConfigManager('tests/unit/data_access/config/mock_alerts_sources_invalid_access_token.yaml')
+            config_manager = ConfigManager('tests/unit/data_accessors/config/mock_alerts_sources_invalid_access_token.yaml')
         assert expected_error_message in str(exc_info.value)
     
     def test_create_connection_with_supported_config(self, mock_feedly_dao):
@@ -81,7 +73,6 @@ class TestFeedlyConfig:
 
         assert "Invalid config type" in str(exc_info.value)
         assert "Expected one of the supported configurations" in str(exc_info.value)
-        
 
     # Currently the get_dao method is not being used, but it's good to have a test for it in case it's needed in the future.
     def test_get_feedly_dao_valid(self, mock_feedly_dao):
@@ -106,7 +97,7 @@ class TestFeedlyDao:
             'items': mock_feedly_data,
             'continuation': None
         }
-        mock_get = mocker.patch('data_access.fetchers.feedly.requests.get', return_value=mock_response)
+        mock_get = mocker.patch('data_accessors.fetchers.feedly.requests.get', return_value=mock_response)
 
         # Execute: call the fetch_alerts method with the mocked HTTP response.
         alerts = mock_feedly_dao.fetch_alerts()
@@ -139,7 +130,7 @@ def test_fetch_alerts_with_continuation(mocker, mock_feedly_dao):
     ]
     
     # Mock requests.get to return different responses in sequence
-    mock_get = mocker.patch('data_access.fetchers.feedly.requests.get', side_effect=responses)
+    mock_get = mocker.patch('data_accessors.fetchers.feedly.requests.get', side_effect=responses)
 
     # Execute
     alerts = mock_feedly_dao.fetch_alerts()
@@ -157,7 +148,7 @@ def test_fetch_alerts_network_failure(mocker, mock_feedly_dao):
     mock_response.raise_for_status.side_effect = Exception("Network failure")
 
     # Patch requests.get to return the mock response
-    mock_get = mocker.patch('data_access.fetchers.feedly.requests.get', return_value=mock_response)
+    mock_get = mocker.patch('data_accessors.fetchers.feedly.requests.get', return_value=mock_response)
 
     # Execute: Try to fetch alerts and expect an exception to be raised
     with pytest.raises(Exception) as excinfo:
