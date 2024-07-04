@@ -3,6 +3,9 @@
 # Manually managing azure-functions-worker may cause unexpected issues
 
 azure-functions
+azure-cosmos
+azure-identity
+azure-keyvault
 pydantic-settings==2.3.3
 pydantic
 pymongo==4.7.3

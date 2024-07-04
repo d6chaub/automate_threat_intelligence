@@ -1,5 +1,9 @@
 # Project Setup and Management Guide
 
+# ToDo
+- Add instruction for running locally and setting the appropriate env vars.
+- Also add info for where the env vars are coming from (the bicep file in the other repo - put a url to it...)
+
 ## Developer Setup
 ### Requirements
 Ensure Docker and Docker Compose are installed to handle both development and production pipelines.

@@ -1,0 +1,5 @@
+feedly_sources:
+  - feed_name: "AI Feeds"
+    stream_id: "enterprise/shell/category/064f55ca-d0b0-4d21-bd5f-328bc4bc10b6"
+  - feed_name: "CERTs"
+    stream_id: "enterprise/shell/category/39cc9153-c695-4982-bf28-9a0afc0ab8ee"

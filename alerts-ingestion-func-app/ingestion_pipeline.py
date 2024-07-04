@@ -4,26 +4,34 @@ Script should be called by the 'ingestion_pipeline_trigger.sh' script in the sam
 import logging
 import os
 
+from azure.cosmos import CosmosClient
+from azure.identity import DefaultAzureCredential
 from pymongo import MongoClient
 
-from data_accessors.config import ConfigManager
-from data_accessors.datastores.alerts import AlertsDAO, MongoConfig
+from config_managers.configs_manager import ConfigsManager
+from data_accessors.datastores.alerts import (AlertsDAOCosmos, AlertsDAOMongo,
+                                              CosmosConfig, MongoConfig)
 from data_accessors.fetchers import FetcherFactory
 from data_accessors.fetchers.feedly import FeedlyConfig
 
 logging.basicConfig(level=logging.INFO)
 
-# Instantiate a ConfigManager Singleton object to load the configurations.
-config_manager = ConfigManager() # Loads configs from environment variables.
+config_manager = ConfigsManager() # Loads configs from environment variables, keyvault secrets, and config files.
 
 # Instantiate a dao for the Feedly data source.
 feedly_config: FeedlyConfig = config_manager.retrieve_config(FeedlyConfig)
 feedly_fetcher = FetcherFactory.create_connection(feedly_config)
 
-# Get credentials for MongoDB and create connection to the main data store.
-mongo_config: MongoConfig = config_manager.retrieve_config(MongoConfig)
-mongo_client = MongoClient(mongo_config.host, mongo_config.port)
-alerts_permanent_datastore = AlertsDAO(mongo_config, mongo_client)
+# Create connection to the main data store.
+if os.getenv("IS_LOCAL") == "True": # CosmosDB local emulator won't run on Mac M1, so I use MongoDB for local development.
+    mongo_config: MongoConfig = config_manager.retrieve_config(MongoConfig)
+    mongo_client = MongoClient(mongo_config.host, mongo_config.port)
+    alerts_permanent_datastore = AlertsDAOMongo(mongo_config, mongo_client)
+else:
+    # For Azure deployments, use managed identity to authenticate with CosmosDB.
+    cosmos_config: CosmosConfig = config_manager.retrieve_config(CosmosConfig)
+    cosmos_client = CosmosClient(cosmos_config.url, credential=DefaultAzureCredential())
+    alerts_permanent_datastore = AlertsDAOCosmos(cosmos_config, cosmos_client)
 
 def run_ingestion_pipeline():
     # Fetch recent articles from Feedly.
