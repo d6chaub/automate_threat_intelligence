@@ -3,7 +3,7 @@ import json
 import pytest
 from dotenv import dotenv_values
 
-from data_accessors.config import ConfigManager
+from config_managers.configs_manager import ConfigsManager
 
 
 @pytest.fixture(scope="module")
@@ -12,7 +12,7 @@ def mock_feedly_data():
     with open('tests/unit/data_accessors/mock_feedly_data.json', 'r', encoding='utf-8') as file:
         return json.load(file)
 
-# ToDo: At some point in the future maybe refactor all this to inject the ConfigManager
+# ToDo: At some point in the future maybe refactor all this to inject the ConfigsManager
 #       every time so that the config manager doesn't need to be reset in this way.
 
 @pytest.fixture(scope="function")
@@ -32,7 +32,7 @@ def mock_config_manager(load_env_vars):
     Load mock configurations for the whole app from mock yaml file and environment variables.
     Singleton 'app_configs' is reset before and after each test to avoid state leakage.
     """
-    ConfigManager.reset()
-    app_configs = ConfigManager('tests/unit/data_accessors/config/mock_alerts_sources.yaml')
+    ConfigsManager.reset()
+    app_configs = ConfigsManager('tests/unit/data_accessors/config/mock_alerts_sources.yaml')
     yield app_configs
-    ConfigManager.reset()
+    ConfigsManager.reset()

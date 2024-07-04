@@ -1,7 +1,7 @@
 data_sources:
   Feedly:
     access_token: "" # Should not be empty.
-    stream_feed_mappings:
+    feeds:
       - feed_name: "AI Feeds"
         stream_id: "cdcdcdcd"
       - feed_name: "CERTs"

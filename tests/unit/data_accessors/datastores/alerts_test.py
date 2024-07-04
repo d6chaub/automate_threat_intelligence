@@ -7,7 +7,7 @@ import pytest
 from mongomock import MongoClient
 from pydantic_settings import BaseSettings
 
-from data_accessors.config import ConfigManager
+from config_managers.configs_manager import ConfigsManager
 from data_accessors.datastores.alerts import AlertsDAO, MongoConfig
 
 # ToDo: Add unit tests for the other methods in the AlertsDAO class.
@@ -15,7 +15,7 @@ from data_accessors.datastores.alerts import AlertsDAO, MongoConfig
 
 
 @pytest.fixture(scope="function")
-def mock_mongo_config(mock_config_manager: ConfigManager): # mock_config_manager is a fixture from conftest.py
+def mock_mongo_config(mock_config_manager: ConfigsManager): # mock_config_manager is a fixture from conftest.py
     """Provides a MongoConfig object configured for testing."""
     config = mock_config_manager.retrieve_config("MongoDB")
     print("HELEFE;FLIJAERFO;IAERJF")
@@ -45,35 +45,35 @@ class TestMongoConfig:
     def test_mongo_config_initialization_invalid_port(self, monkeypatch):
         """
         Test loading invalid configuration using environment variables.
-        Note: Initializing the ConfigManager depends on both envs vars (for MongoDB) and a config file (for alerts sources).
-        This coupling is part of the intended design, to keep the interface of the ConfigManager class simple.
+        Note: Initializing the ConfigsManager depends on both envs vars (for MongoDB) and a config file (for alerts sources).
+        This coupling is part of the intended design, to keep the interface of the ConfigsManager class simple.
         Here we are just testing a misconfig of the env vars - we assume the config file is correct (tested elsewhere).
         """
-        ConfigManager.reset() # Singleton reset before and after to avoid state leakage.
+        ConfigsManager.reset() # Singleton reset before and after to avoid state leakage.
         monkeypatch.setenv("MONGO_PORT", "This string is not an integer.")
         expected_error_message = "Input should be a valid integer, unable to parse string as an integer"
         with pytest.raises(_pydantic_core.ValidationError) as exc_info:
-            config_manager = ConfigManager(
+            config_manager = ConfigsManager(
                 'tests/unit/data_accessors/config/mock_alerts_sources.yaml'
             )
         assert expected_error_message in str(exc_info.value)
-        ConfigManager.reset()
+        ConfigsManager.reset()
     def test_mongo_config_initialization_invalid_string(self, monkeypatch):
         """
         Test loading invalid configuration using environment variables.
-        Note: Initializing the ConfigManager depends on both envs vars (for MongoDB) and a config file (for alerts sources).
-        This coupling is part of the intended design, to keep the interface of the ConfigManager class simple.
+        Note: Initializing the ConfigsManager depends on both envs vars (for MongoDB) and a config file (for alerts sources).
+        This coupling is part of the intended design, to keep the interface of the ConfigsManager class simple.
         Here we are just testing a misconfig of the env vars - we assume the config file is correct (tested elsewhere).
         """
-        ConfigManager.reset() # Singleton reset before and after to avoid state leakage.
+        ConfigsManager.reset() # Singleton reset before and after to avoid state leakage.
         monkeypatch.setenv("MONGO_HOST", "") # Setting a required string value to the empty string
         expected_error_message = "String should have at least 1 character"
         with pytest.raises(_pydantic_core.ValidationError) as exc_info:
-            config_manager = ConfigManager(
+            config_manager = ConfigsManager(
                 'tests/unit/data_accessors/config/mock_alerts_sources.yaml'
             )
         assert expected_error_message in str(exc_info.value)
-        ConfigManager.reset()
+        ConfigsManager.reset()
 
 
 

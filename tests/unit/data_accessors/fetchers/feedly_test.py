@@ -2,7 +2,7 @@ import pydantic_core._pydantic_core as _pydantic_core
 import pytest
 from pydantic import BaseModel
 
-from data_accessors.config import ConfigManager
+from config_managers.configs_manager import ConfigsManager
 from data_accessors.fetchers import FetcherFactory
 from data_accessors.fetchers.feedly import FeedlyConfig, FeedlyDAO
 
@@ -12,7 +12,7 @@ class UnsupportedConfig(BaseModel):
     pass
 
 @pytest.fixture(scope="function")
-def mock_feedly_config(mock_config_manager: ConfigManager): # mock_config_manager is a fixture from conftest.py
+def mock_feedly_config(mock_config_manager: ConfigsManager): # mock_config_manager is a fixture from conftest.py
     """Provides a FeedlyConfig object configured for testing."""
     feedly_config = mock_config_manager.retrieve_config("Feedly")
     return feedly_config
@@ -28,8 +28,8 @@ class TestFeedlyConfig:
         """Test loading valid configuration the yaml file."""
         assert isinstance(mock_feedly_config, FeedlyConfig)
         assert mock_feedly_config.access_token == "abababab"
-        assert mock_feedly_config.stream_feed_mappings[1]['feed_name'] == "CERTs"
-        assert mock_feedly_config.stream_feed_mappings[1]['stream_id'] == "efefefef"
+        assert mock_feedly_config.feeds[1]['feed_name'] == "CERTs"
+        assert mock_feedly_config.feeds[1]['stream_id'] == "efefefef"
         assert mock_feedly_config.article_count == 100
         assert mock_feedly_config.fetch_all == True
         assert mock_feedly_config.hours_ago == 24
@@ -37,27 +37,27 @@ class TestFeedlyConfig:
     def test_feedly_config_initialization_invalid_article_count(self, load_env_vars):
         """
         Test loading configuration file with invalid article count. Validating that an error is raised when a string is passed instead of an integer.
-        Note: Initializing the ConfigManager depends on both envs vars (for MongoDB) and a config file (for alerts sources).
-        This coupling is part of the intended design, to keep the interface of the ConfigManager class simple.
+        Note: Initializing the ConfigsManager depends on both envs vars (for MongoDB) and a config file (for alerts sources).
+        This coupling is part of the intended design, to keep the interface of the ConfigsManager class simple.
         Here we are just testing a misconfig of the file - we provide the correct env vars using the load_env_vars fixture from conftest.py.
         """
-        ConfigManager.reset() # Singleton reset before and after to avoid state leakage.
+        ConfigsManager.reset() # Singleton reset before and after to avoid state leakage.
         expected_error_message = "Input should be a valid integer, unable to parse string as an integer"
         with pytest.raises(_pydantic_core.ValidationError) as exc_info:
-            config_manager = ConfigManager('tests/unit/data_accessors/config/mock_alerts_sources_invalid_article_count.yaml')
+            config_manager = ConfigsManager('tests/unit/data_accessors/config/mock_alerts_sources_invalid_article_count.yaml')
         assert expected_error_message in str(exc_info.value)
 
     def test_feedly_config_initialization_invalid_access_token(self, load_env_vars):
         """
         Test loading configuration file with an access token that's empty. Validating that an error is raised when an empty string is passed in the config file.
-        Note: Initializing the ConfigManager depends on both envs vars (for MongoDB) and a config file (for alerts sources).
-        This coupling is part of the intended design, to keep the interface of the ConfigManager class simple.
+        Note: Initializing the ConfigsManager depends on both envs vars (for MongoDB) and a config file (for alerts sources).
+        This coupling is part of the intended design, to keep the interface of the ConfigsManager class simple.
         Here we are just testing a misconfig of the file - we provide the correct env vars using the load_env_vars fixture from conftest.py.
         """
-        ConfigManager.reset() # Singleton reset before and after to avoid state leakage.
+        ConfigsManager.reset() # Singleton reset before and after to avoid state leakage.
         expected_error_message = "String should have at least 1 character"
         with pytest.raises(_pydantic_core.ValidationError) as exc_info:
-            config_manager = ConfigManager('tests/unit/data_accessors/config/mock_alerts_sources_invalid_access_token.yaml')
+            config_manager = ConfigsManager('tests/unit/data_accessors/config/mock_alerts_sources_invalid_access_token.yaml')
         assert expected_error_message in str(exc_info.value)
     
     def test_create_connection_with_supported_config(self, mock_feedly_dao):
@@ -107,7 +107,7 @@ class TestFeedlyDao:
         assert "Microsoft paid Tenable a bug bounty for an Azure flaw it says doesn't need a fix, just better documentation" in [a['title'] for a in alerts]
 
         # In the mocked data, each stream provided should return the same number of alerts.
-        stream_count = len(mock_feedly_config.stream_feed_mappings)
+        stream_count = len(mock_feedly_config.feeds)
         assert len(alerts) == len(mock_feedly_data) * stream_count
 
         # Assert the number of times requests.get was called.
