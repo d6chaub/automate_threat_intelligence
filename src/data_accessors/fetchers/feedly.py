@@ -1,12 +1,13 @@
-import json
 import logging
+import os
 
 import requests
+import yaml
 from pydantic import constr, validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 from .abstract import DataFetcher
+from config_managers.secrets_manager import SecretsManager
 
 logging.basicConfig(level=logging.INFO)
 
@@ -23,37 +24,50 @@ class FeedlyConfig(BaseSettings):
     Attributes:
         model_config (SettingsConfigDict): Environment variable format for the configuration.
         access_token (str): Personal Access Token for authenticating with the Feedly API.
-        stream_feed_mappings (list[dict]): List of dictionaries, each containing a stream ID and the name of the feed associated with it.
+        feeds (list[dict]): List of dictionaries, each containing a stream ID and the name of the feed associated with it.
         article_count (int): Number of articles to fetch from each stream.
         fetch_all (bool): If True, continue fetching until no more articles are available.
         hours_ago (int): Unix timestamp to fetch articles newer than this time. None to ignore.
     """
     model_config: SettingsConfigDict = SettingsConfigDict(env_prefix="FEEDLY_")
-    access_token: constr(min_length=6)
-    stream_feed_mappings: list[dict] # As a json string
     article_count: int
     fetch_all: bool
     hours_ago: int
+    feeds: str = ''
+    access_token: str = ''
 
-    @validator('stream_feed_mappings', pre=True, always=True)
-    def parse_json_to_list(cls, v):
-        if isinstance(v, str):
-            try:
-                parsed = json.loads(v)
-                # Check that it's a list
-                if not isinstance(parsed, list):
-                    raise ValueError('stream_feed_mappings must be a list')
-                # Check each item in the list
-                for item in parsed:
-                    if not isinstance(item, dict):
-                        raise ValueError('Each item in stream_feed_mappings must be a dictionary')
-                    required_keys = {'feed_name', 'stream_id'}
-                    if not required_keys.issubset(item.keys()):
-                        raise ValueError(f"Each dictionary must contain the keys: {required_keys}")
-                return parsed
-            except json.JSONDecodeError:
-                raise ValueError('Invalid JSON format for stream_feed_mappings')
-        return v
+    def model_post_init(self, __context): # Override the default post_init method to load configs from file and secrets.
+        def _validate_source_config(config: dict):
+            if 'feedly_sources' not in config:
+                raise ValueError('Required feedly_sources key not found in the configuration file')
+            sources_config = config['feedly_sources']
+            for item in sources_config:
+                if not isinstance(item, dict):
+                    raise ValueError('Each item in feeds must be a dictionary')
+                required_keys = {'feed_name', 'stream_id'}
+                if not required_keys.issubset(item.keys()):
+                    raise ValueError(f"Each dictionary must contain the keys: {required_keys}")
+        def load_ingestion_source_config():
+            config_path = 'feedly_sources.yaml'
+            with open(config_path, 'r') as file:
+                config = yaml.safe_load(file)
+            _validate_source_config(config)
+            self.feeds = config['feedly_sources']
+        def load_feedly_access_token():
+            if os.getenv("IS_LOCAL") == "True":
+                self.access_token = os.getenv("FEEDLY_ACCESS_TOKEN")
+                return
+            self.access_token = SecretsManager().get_secret_value('feedly-access-token')
+        load_ingestion_source_config()
+        load_feedly_access_token()
+            
+
+            
+            
+
+        
+        # use default azure authentication to get the access token from keyvault.
+    
 
 class FeedlyDAO(DataFetcher):
     """Concrete implementation of DataFetcher to fetch data from Feedly."""
@@ -68,7 +82,7 @@ class FeedlyDAO(DataFetcher):
         """
         # Unpack the config object.
         self.access_token = config.access_token
-        self.stream_feed_mappings = config.stream_feed_mappings
+        self.feeds = config.feeds
         self.article_count = config.article_count
         self.fetch_all = config.fetch_all
         self.hours_ago = config.hours_ago
@@ -83,15 +97,15 @@ class FeedlyDAO(DataFetcher):
         """
         # And then call fetch_articles() to get the articles.
         logging.info('Fetching data from Feedly, from the following feeds:')
-        logging.info([mapping['feed_name'] for mapping in self.stream_feed_mappings])
-        for i, mapping in enumerate(self.stream_feed_mappings):
+        logging.info([mapping['feed_name'] for mapping in self.feeds])
+        for i, mapping in enumerate(self.feeds):
             logging.info('%d. %s', i, mapping['feed_name'])
         logging.info('\n')
 
         alerts_all_streams: list[dict] = []
 
         # Fetch all articles from each pre-configured stream.
-        for mapping in self.stream_feed_mappings:
+        for mapping in self.feeds:
             stream_alerts: list[dict] = self._fetch_articles_from_stream(mapping)
             alerts_all_streams.extend(stream_alerts)
             logging.info('\n*After fetching all alerts from stream %s, the running total of alerts from all stream fetched is: %d*\n', mapping['feed_name'], len(alerts_all_streams))

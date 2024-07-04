@@ -2,16 +2,17 @@ import logging
 import os
 
 import yaml
-from data_accessors.datastores.alerts import MongoConfig
-from data_accessors.fetchers.feedly import FeedlyConfig
 from pydantic_settings import BaseSettings
+
+from data_accessors.datastores.alerts import CosmosConfig, MongoConfig
+from data_accessors.fetchers.feedly import FeedlyConfig
 
 CONFIGS = [
     FeedlyConfig,
-    MongoConfig
+    CosmosConfig
 ]
 
-class ConfigManager:
+class ConfigsManager:
     """
     Singleton class to manage configurations for different data sources.
     
@@ -27,7 +28,7 @@ class ConfigManager:
     # Work out how to set the config path
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super(ConfigManager, cls).__new__(cls)
+            cls._instance = super(ConfigsManager, cls).__new__(cls)
             cls._instance.configs = []
             cls._instance._initialize_configs()
         return cls._instance
@@ -43,6 +44,9 @@ class ConfigManager:
     def _initialize_configs(self):
         for config_class in CONFIGS:
             self.configs.append(config_class()) # The config classes are initialized with env vars, using pydantic_settings internally for validation and null-checks.
+        if os.getenv("IS_LOCAL") == "True":
+            self.configs.append(MongoConfig()) # Since the CosmosDB emulator is buggy on M1 Macs, I use MongoDB for local development.
+                
 
     # Accessor methods
     def retrieve_config(self, config_class: BaseSettings):
