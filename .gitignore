@@ -17,6 +17,7 @@ local/
 config/local
 notebooks/local
 certs/
+deployment-artifacts/
 
 # Sensitive config files.
 config/alerts_sources.yaml

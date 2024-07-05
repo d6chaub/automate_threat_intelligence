@@ -1,22 +1,15 @@
 #!/bin/bash
 
-# Install jq
-if ! command -v jq &> /dev/null; then
-  echo "jq is not installed. Installing jq..."
-  sudo apt-get install jq
-fi
-
 # Default action
 ACTION="what-if"
 
-# Function to display usage information
 usage() {
   echo "Usage: $0 [--whatif | --deploy] --target-deployment-environment <target_environment>"
   echo "       Perform a What-If analysis or an actual deployment for the specified Azure resources."
   echo "Options:"
   echo "  --whatif        Perform a What-If analysis (default)"
   echo "  --deploy        Perform the actual deployment"
-  echo "  --target-deployment-environment              Target deployment environment"
+  echo "  --target-deployment-environment      Target deployment environment ('dev' or 'prod')"
   echo "  -h, --help      Display this help message"
 }
 
@@ -46,6 +39,13 @@ while [[ "$1" != "" ]]; do
       ;;
   esac
 done
+
+# Install jq
+if ! command -v jq &> /dev/null; then
+  echo "jq is not installed. Installing jq..."
+  sudo apt-get install jq
+fi
+
 
 # Validate required parameters
 if [ -z "$TARGET_DEPLOYMENT_ENVIRONMENT" ]; then

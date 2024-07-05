@@ -30,8 +30,8 @@ isort = "^5.13.2"
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.pytest.ini_options]
-addopts = "-v --cov=data_accessors --cov-report=term-missing"
-testpaths = [
-    "tests",
-]
+#[tool.pytest.ini_options]
+#addopts = "-v --cov=data_accessors --cov-report=term-missing"
+#testpaths = [
+#    "tests",
+#]

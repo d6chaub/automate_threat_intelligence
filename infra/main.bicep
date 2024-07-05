@@ -4,6 +4,7 @@
 //  \ V / (_| | |  | | (_| | |_) | |  __/ | |_| |  __/ (__| | (_| | | | (_| | |_| | (_) | | | \__ \
 //   \_/ \__,_|_|  |_|\__,_|_.__/|_|\___| |____/ \___|\___|_|\__,_|_|  \__,_|\__|_|\___/|_| |_|___/
 //
+// ToDo: Deploy with deployment stack
 param subscriptionId string // Needed to compile .biceparam file even though not used here. Used in other script.
 param resourceGroupName string // Needed to compile .biceparam file even though not used here. Used in other script.
 
