@@ -26,7 +26,7 @@ class ConfigsManager:
     _instance = None
 
     # Work out how to set the config path
-    def __new__(cls):
+    def __new__(cls, feedly_config_path='feedly_sources.yaml'):
         if cls._instance is None:
             cls._instance = super(ConfigsManager, cls).__new__(cls)
             cls._instance.configs = []

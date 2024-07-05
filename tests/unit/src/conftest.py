@@ -1,4 +1,5 @@
 import json
+import os
 
 import pytest
 from dotenv import dotenv_values
@@ -9,7 +10,7 @@ from config_managers.configs_manager import ConfigsManager
 @pytest.fixture(scope="module")
 def mock_feedly_data():
     """Load mock alert data from a JSON file."""
-    with open('tests/unit/data_accessors/mock_feedly_data.json', 'r', encoding='utf-8') as file:
+    with open('tests/unit/mock_feedly_data.json', 'r', encoding='utf-8') as file:
         return json.load(file)
 
 # ToDo: At some point in the future maybe refactor all this to inject the ConfigsManager
@@ -21,7 +22,7 @@ def load_env_vars(monkeypatch):
     Load environment variables from a .env file.
     """
     print("load_env_vars called first time", flush=True)
-    env_vars = dotenv_values('tests/unit/data_accessors/.env.test')
+    env_vars = dotenv_values('tests/unit/.env.test')
 
     for k,v in env_vars.items():
         monkeypatch.setenv(k, v)
@@ -32,7 +33,9 @@ def mock_config_manager(load_env_vars):
     Load mock configurations for the whole app from mock yaml file and environment variables.
     Singleton 'app_configs' is reset before and after each test to avoid state leakage.
     """
-    ConfigsManager.reset()
-    app_configs = ConfigsManager('tests/unit/data_accessors/config/mock_alerts_sources.yaml')
+    for each in os.environ:
+        print(each)
+    ConfigsManager.reload_configs()
+    app_configs = ConfigsManager()
     yield app_configs
-    ConfigsManager.reset()
+    ConfigsManager.reload_configs()

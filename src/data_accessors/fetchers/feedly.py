@@ -35,6 +35,7 @@ class FeedlyConfig(BaseSettings):
     hours_ago: int
     feeds: str = ''
     access_token: str = ''
+    config_path: str = 'feedly_sources.yaml'
 
     def model_post_init(self, __context): # Override the default post_init method to load configs from file and secrets.
         def _validate_source_config(config: dict):
@@ -48,8 +49,9 @@ class FeedlyConfig(BaseSettings):
                 if not required_keys.issubset(item.keys()):
                     raise ValueError(f"Each dictionary must contain the keys: {required_keys}")
         def load_ingestion_source_config():
-            config_path = 'feedly_sources.yaml'
-            with open(config_path, 'r') as file:
+            if not os.path.exists(self.config_path):
+                raise FileNotFoundError(f'Configuration file not found at path: {self.config_path}')
+            with open(self.config_path, 'r') as file:
                 config = yaml.safe_load(file)
             _validate_source_config(config)
             self.feeds = config['feedly_sources']

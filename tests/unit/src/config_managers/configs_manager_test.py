@@ -1,7 +1,7 @@
 import pytest
 
 from config_managers.configs_manager import ConfigsManager
-from data_accessors.datastores.alerts import MongoConfig
+from data_accessors.datastores.alerts import MongoConfig, CosmosConfig
 
 
 class TestConfigsManager: # mock_config_manager is a fixture from conftest.py
@@ -11,10 +11,11 @@ class TestConfigsManager: # mock_config_manager is a fixture from conftest.py
 
     def test_load_app_config_valid_name(self, mock_config_manager: ConfigsManager): # mock_config_manager is a fixture from conftest.py
         """Test behavior with a valid datastore type."""
-        valid_config_name = "MongoDB"
-        config = mock_config_manager.retrieve_config(valid_config_name)
-        assert isinstance(config, MongoConfig)
-    
+        mongo_config = mock_config_manager.retrieve_config(MongoConfig)
+        assert isinstance(mongo_config, MongoConfig)
+        cosmos_config = mock_config_manager.retrieve_config(CosmosConfig)
+        assert isinstance(cosmos_config, CosmosConfig)
+
     
     def test_load_app_config_invalid_name(self, mock_config_manager: ConfigsManager): # mock_config_manager is a fixture from conftest.py
         """Test behavior with an invalid datastore type."""
