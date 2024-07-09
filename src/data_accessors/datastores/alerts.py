@@ -21,32 +21,18 @@ class MongoConfig(BaseSettings):
         alerts_collection (str): The name of the collection to use for alerts.
     """
     model_config: SettingsConfigDict = SettingsConfigDict(env_prefix="MONGO_")
-    host: constr(min_length=5)
+    host: constr(min_length=1)
     port: int
     alerts_database_id: constr(min_length=1)
     alerts_collection_id: constr(min_length=1)
 
 
 class CosmosConfig(BaseSettings):
-    """
-    Configuration for connecting to an Azure Cosmos DB database using environment variables.
-    
-    Attributes:
-        model_config (SettingsConfigDict): Environment variable format for the configuration,
-            allowing to specify the prefix for environment variables specifically for Cosmos DB.
-        name (str): The URL endpoint for the Azure Cosmos DB account. This URL is used to create 
-            the connection to the Cosmos DB service.
-        key (str): The primary or secondary key for the Cosmos DB account. This key is used to 
-            authenticate and authorize access to the database.
-        database_id (str): The unique identifier for the database within the Cosmos DB account. 
-            This is used to direct operations to the specific database.
-        container_id (str): The identifier for the container (or collection) in the database. 
-            Containers hold the JSON documents and are analogous to tables in relational databases.
-    """
     model_config: SettingsConfigDict = SettingsConfigDict(env_prefix="COSMOS_")
     name: constr(min_length=3)
     alerts_database_id: constr(min_length=1)
     alerts_container_id: constr(min_length=1)
+    alerts_container_partition_key: constr(min_length=1)
     url: str = ''
 
     def model_post_init(self, __context):
@@ -59,6 +45,7 @@ class AlertsDAOMongo(AlertsDAO):
     Data Access Object (DAO) for managing alert notifications from multiple sources,
     stored in a MongoDB collection.
     """
+    # ToDo: Use the actual Alerts Entity model class to insert to DB. For now hard-coding.
 
     def __init__(self, config: MongoConfig, client: MongoClient):
         """
@@ -146,7 +133,7 @@ class AlertsDAOMongo(AlertsDAO):
         return list(self.collection.find())
     
     # Method for debugging. Not for production use, no need to test.
-    def debug_list_all_dbs_and_collections(self): # pragma: no cover
+    def debug_list_all_dbs_and_cols(self): # pragma: no cover
         """
         Debug method to list all databases and collections in the MongoDB instance.
         """
@@ -160,23 +147,17 @@ class AlertsDAOMongo(AlertsDAO):
 
 class AlertsDAOCosmos(AlertsDAO):
     def __init__(self, config: CosmosConfig, client: CosmosClient):
+        self.container_partition_key = config.alerts_container_partition_key
         self.client = client
         self.database = self.client.get_database_client(config.alerts_database_id)
         self.container = self.database.get_container_client(config.alerts_container_id)
 
-    def _add_alert(self, alert: dict):
-        response = self.container.upsert_item(alert)
-        return response['id']
-
     def add_alert_if_not_exists(self, alert: dict):
         try:
-            # Check if alert with the same id already exists
-            item_id = alert.get('id')
-            if item_id and self.get_alert(item_id):
-                return None
-            return self._add_alert(alert)
-        except exceptions.CosmosHttpResponseError as e:
-            # Handle Cosmos DB specific exceptions
+            # test object -- make this into a proper model class...
+            db_obj = {'alertUrl': 'Feedly', 'alert_body': alert} # paritionkey should be 'aggregatorPlatformName' and id should be 'contentPublicationUrl'
+            self.container.create_item(body=db_obj, enable_automatic_id_generation=True) # Disable auto_id afterwards and configure the id to be the contentPublicationUrl
+        except exceptions.CosmosResourceExistsError:
             return None
 
     def add_alerts_if_not_exist(self, alerts: list[dict]) -> list[int]:
@@ -187,23 +168,6 @@ class AlertsDAOCosmos(AlertsDAO):
                 inserted_ids.append(inserted_id)
         return inserted_ids
 
-    def delete_alert(self, item_id):
-        try:
-            response = self.container.delete_item(item=item_id, partition_key=item_id)
-            return response
-        except exceptions.CosmosHttpResponseError as e:
-            # Handle the error or log it
-            return None
-
-    def get_alert(self, item_id):
-        try:
-            response = self.container.read_item(item=item_id, partition_key=item_id)
-            return response
-        except exceptions.CosmosItemNotFoundError:
-            return None
-        except exceptions.CosmosHttpResponseError:
-            # Handle other Cosmos DB errors
-            return None
 
     def get_all_alerts(self):
         query = "SELECT * FROM c"
@@ -211,13 +175,13 @@ class AlertsDAOCosmos(AlertsDAO):
         return items
 
     # Debugging method for listing databases and collections - optional
-    def debug_list_all_dbs_and_collections(self):  # pragma: no cover
+    def debug_list_all_dbs_and_cols(self):  # pragma: no cover
         """
         Debug method to list all databases and collections in the Cosmos DB instance.
         """
-        print("Listing all databases and containers:")
+        logging.info("Listing all databases and containers:")
         for db in self.client.list_databases():
-            print(f"Database: {db['id']}")
+            logging.info(f"Database: {db['id']}")
             database_client = self.client.get_database_client(db['id'])
             for container in database_client.list_containers():
-                print(f"  Container: {container['id']}")
+                logging.info(f"  Container: {container['id']}")

@@ -24,7 +24,7 @@ class FeedlyConfig(BaseSettings):
     Attributes:
         model_config (SettingsConfigDict): Environment variable format for the configuration.
         access_token (str): Personal Access Token for authenticating with the Feedly API.
-        feeds (list[dict]): List of dictionaries, each containing a stream ID and the name of the feed associated with it.
+        feedly_sources (list[dict]): List of dictionaries, each containing a stream ID and the name of the feed associated with it.
         article_count (int): Number of articles to fetch from each stream.
         fetch_all (bool): If True, continue fetching until no more articles are available.
         hours_ago (int): Unix timestamp to fetch articles newer than this time. None to ignore.
@@ -35,7 +35,7 @@ class FeedlyConfig(BaseSettings):
     hours_ago: int
     feeds: str = ''
     access_token: str = ''
-    config_path: str = 'feedly_sources.yaml'
+
 
     def model_post_init(self, __context): # Override the default post_init method to load configs from file and secrets.
         def _validate_source_config(config: dict):
@@ -49,9 +49,10 @@ class FeedlyConfig(BaseSettings):
                 if not required_keys.issubset(item.keys()):
                     raise ValueError(f"Each dictionary must contain the keys: {required_keys}")
         def load_ingestion_source_config():
-            if not os.path.exists(self.config_path):
-                raise FileNotFoundError(f'Configuration file not found at path: {self.config_path}')
-            with open(self.config_path, 'r') as file:
+            alerts_config_path = os.getenv('ALERTS_CONFIG_PATH', 'alerts_sources.yaml') # Default to file in root of az func folder if not set.
+            if not os.path.exists(alerts_config_path):
+                raise FileNotFoundError(f'Configuration file not found at path: {alerts_config_path}')
+            with open(alerts_config_path, 'r') as file:
                 config = yaml.safe_load(file)
             _validate_source_config(config)
             self.feeds = config['feedly_sources']
@@ -62,11 +63,6 @@ class FeedlyConfig(BaseSettings):
             self.access_token = SecretsManager().get_secret_value('feedly-access-token')
         load_ingestion_source_config()
         load_feedly_access_token()
-            
-
-            
-            
-
         
         # use default azure authentication to get the access token from keyvault.
     
@@ -90,6 +86,8 @@ class FeedlyDAO(DataFetcher):
         self.hours_ago = config.hours_ago
 
         self.headers: dict = {'Authorization': f'Bearer {self.access_token}'}
+        # Print first and last 2 chars of the access token for debugging purposes.
+        logging.info('Access token: %s...%s', self.access_token[:2], self.access_token[-2:])
 
     def fetch_alerts(self) -> dict:
         """

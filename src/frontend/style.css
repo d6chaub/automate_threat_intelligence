@@ -1,0 +1,33 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 20px;
+    background: #e0f4ff; /* Soft pastel blue background */
+    color: #333;
+}
+
+header {
+    background: #005a9c; /* Dark blue */
+    color: #ffffff;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    padding: 0;
+}
+
+header p {
+    font-weight: lighter;
+}
+
+table {
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.dataTables_wrapper {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1); /* Adds subtle shadow to the table */
+    background: #fafafa; /* Light grey background for table area */
+    padding: 20px; /* Adds padding around the table for spacing */
+}

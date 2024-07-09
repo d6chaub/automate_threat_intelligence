@@ -26,7 +26,8 @@ class ConfigsManager:
     _instance = None
 
     # Work out how to set the config path
-    def __new__(cls, feedly_config_path='feedly_sources.yaml'):
+    def __new__(cls, feedly_config_path='alerts_sources.yaml'):
+        logging.info("Entered the __new__ method.")
         if cls._instance is None:
             cls._instance = super(ConfigsManager, cls).__new__(cls)
             cls._instance.configs = []
@@ -34,7 +35,7 @@ class ConfigsManager:
         return cls._instance
     
     @classmethod
-    def reload_configs(cls):
+    def reset(cls):
         """Primary used for testing to avoid state leakage"""
         cls._instance = None
         # ToDo: Here reload the configs by calling __new__ again or smt?
@@ -42,10 +43,19 @@ class ConfigsManager:
 
     # ToDo: Document how the value checking is done with environment variables using pydantic_settings
     def _initialize_configs(self):
+        logging.info("Entered the initialize_configs method.")
+        logging.info(f"CONFIGS: {CONFIGS}")
         for config_class in CONFIGS:
-            self.configs.append(config_class()) # The config classes are initialized with env vars, using pydantic_settings internally for validation and null-checks.
-        if os.getenv("IS_LOCAL") == "True":
-            self.configs.append(MongoConfig()) # Since the CosmosDB emulator is buggy on M1 Macs, I use MongoDB for local development.
+            try:
+                self.configs.append(config_class()) # The config classes are initialized with env vars, using pydantic_settings internally for validation and null-checks.
+                logging.info(f"Loaded configuration for {config_class.__name__}.")
+            except Exception as e:
+                logging.error(f"Failed to load configuration for {config_class.__name__}.")
+                logging.error(e)
+                raise e
+        
+        if os.getenv("IS_LOCAL") == "True": # Since the CosmosDB emulator is buggy on M1 Macs, I use MongoDB for local development.
+            self.configs.append(MongoConfig())
                 
 
     # Accessor methods

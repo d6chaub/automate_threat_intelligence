@@ -32,6 +32,6 @@ class SecretsManager:
         self.keyvault_client = keyvault_client
 
     def get_secret_value(self, secret_name: str):
-        return self.keyvault_client.get_secret(secret_name)
+        return self.keyvault_client.get_secret(secret_name).value
         
                 
