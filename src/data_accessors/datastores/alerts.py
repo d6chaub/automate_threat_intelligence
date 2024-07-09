@@ -33,7 +33,7 @@ class CosmosConfig(BaseSettings):
     alerts_database_id: constr(min_length=1)
     alerts_container_id: constr(min_length=1)
     alerts_container_partition_key: constr(min_length=1)
-    url: str = ''
+    url: str = '' # ToDo: Might be better to initialise with '= field(init=False)' rather than empty str, and then set in post_init as I am. Look into this.
 
     def model_post_init(self, __context):
         self.url = f"https://{self.name}.documents.azure.com:443/"

@@ -33,8 +33,8 @@ class FeedlyConfig(BaseSettings):
     article_count: int
     fetch_all: bool
     hours_ago: int
-    feeds: str = ''
-    access_token: str = ''
+    feeds: str = '' # ToDo: Might be better to initialise with '= field(init=False)' rather than empty str, and then set in post_init as I am. Look into this.
+    access_token: str = '' # ToDo: Might be better to initialise with '= field(init=False)' rather than empty str, and then set in post_init as I am. Look into this.
 
 
     def model_post_init(self, __context): # Override the default post_init method to load configs from file and secrets.
