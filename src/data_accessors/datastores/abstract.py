@@ -15,13 +15,5 @@ class AlertsDAO(ABC):
         pass
 
     @abstractmethod
-    def delete_alert(self, item_id):
-        pass
-
-    @abstractmethod
-    def get_alert(self, item_id):
-        pass
-
-    @abstractmethod
     def get_all_alerts(self):
         pass
