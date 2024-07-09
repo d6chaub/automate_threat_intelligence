@@ -16,15 +16,8 @@ def timer_trigger_ingestion_pipeline(ingestiontimer: func.TimerRequest) -> None:
     try:
 
         init_utc_timestamp = datetime.datetime.now(datetime.timezone.utc)
-
         logging.info('Ingestion pipeline trigger function ran at %s', init_utc_timestamp.isoformat())
-        logging.info('A further test log...')
-
-        logging.info("The pwd is: %s", os.getcwd())
-
-        logging.info("The pythonpath is: %s", os.environ.get('PYTHONPATH'))
-        
-
+    
         run_ingestion_pipeline()
 
         terminate_utc_timestamp = datetime.datetime.now(datetime.timezone.utc)
@@ -35,4 +28,4 @@ def timer_trigger_ingestion_pipeline(ingestiontimer: func.TimerRequest) -> None:
     
     except Exception as e:
         logging.error('Azure Function failed with error: %s', e)
-        return
+        raise e

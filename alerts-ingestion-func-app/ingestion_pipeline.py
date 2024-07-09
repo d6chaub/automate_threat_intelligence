@@ -35,9 +35,9 @@ Script should be called by the 'ingestion_pipeline_trigger.sh' script in the sam
 
 def run_ingestion_pipeline():
     ################TEMP DEBUG (then put it back above)####################
+    import logging
     logging.info("The run ingestion pipeline function has been triggered.")
     try:
-        import logging
         import os
 
         from azure.cosmos import CosmosClient
@@ -50,8 +50,9 @@ def run_ingestion_pipeline():
         from data_accessors.fetchers import FetcherFactory
         from data_accessors.fetchers.feedly import FeedlyConfig
 
-        logging.basicConfig(level=logging.INFO)
+        logging.debug("CHECKING THAT LOGGING.DEBUG WORKS IN THE FUNCTION.")
 
+        # ToDo: At some point replace the ConfigsManager approach with dependency injection?
         config_manager = ConfigsManager() # Loads configs from environment variables, keyvault secrets, and config files.
 
         # Instantiate a dao for the Feedly data source.
@@ -68,9 +69,10 @@ def run_ingestion_pipeline():
             cosmos_config: CosmosConfig = config_manager.retrieve_config(CosmosConfig)
             cosmos_client = CosmosClient(cosmos_config.url, credential=DefaultAzureCredential())
             alerts_permanent_datastore = AlertsDAOCosmos(cosmos_config, cosmos_client)
+            alerts_permanent_datastore.debug_list_all_dbs_and_cols()
     except Exception as e:
         logging.error('Error in the run_ingestion_pipeline function: %s', e)
-        return
+        raise e
     #################################################
 
 
