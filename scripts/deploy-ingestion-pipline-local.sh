@@ -29,6 +29,22 @@ while [[ "$1" != "" ]]; do
   esac
 done
 
+if [ -z "$TARGET_DEPLOYMENT_ENVIRONMENT" ]; then
+  echo "Error: --target-deployment-environment is required."
+  usage
+  exit 1
+fi
+
+# if prod validate the user wants to continue
+if [ "$TARGET_DEPLOYMENT_ENVIRONMENT" == "prod" ]; then
+  read -p "Are you sure you want to deploy to production? (y/n) "
+  echo
+  if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    echo "User did not confirm with 'y' or 'Y'. Exiting."
+    exit 0
+  fi
+fi
+
 # Install jq
 if ! command -v jq &> /dev/null; then
   echo "jq is not installed. Installing jq..."

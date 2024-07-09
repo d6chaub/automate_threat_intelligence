@@ -19,6 +19,9 @@ notebooks/local
 certs/
 deployment-artifacts/
 
+# Packages.
+node_modules
+
 # Sensitive config files.
 config/alerts_sources.yaml
 

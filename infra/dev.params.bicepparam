@@ -19,6 +19,9 @@ param cosmosDbAlertsDatabaseId = 'threat_intelligence'
 @description('The ID of the Cosmos DB container.')
 param cosmosDbAlertsContainerId  = 'alerts'
 
+@description('The ID of the Cosmos DB container partition key.')
+param cosmosDbAlertsContainerPartitionKey = '/aggregatorPlatformName'
+
 // Ingestion Pipeline Function App
 
 @description('The name of the ingestion pipeline Function App.')

@@ -12,6 +12,7 @@ param resourceGroupName string // Needed to compile .biceparam file even though 
 param cosmosDbAccountName string
 param cosmosDbAlertsDatabaseId string
 param cosmosDbAlertsContainerId string
+param cosmosDbAlertsContainerPartitionKey string
 
 // Ingestion Pipeline Function App
 param ingestionFunctionAppName string
@@ -67,7 +68,7 @@ resource alertsContainer 'Microsoft.DocumentDB/databaseAccounts/sqlDatabases/con
       id: cosmosDbAlertsContainerId
       partitionKey: {
         paths: [
-          '/alertUrl'
+          cosmosDbAlertsContainerPartitionKey
         ]
         kind: 'Hash'
       }
