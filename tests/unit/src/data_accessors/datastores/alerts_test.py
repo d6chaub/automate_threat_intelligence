@@ -11,7 +11,7 @@ from config_managers.configs_manager import ConfigsManager
 from data_accessors.datastores.alerts import AlertsDAOMongo, MongoConfig
 
 # ToDo: Add unit tests for the other methods in the AlertsDAO class.
-#       e.g. .add_alert_if_not_exists etc
+#       e.g. .add_alert_if_not_duplicate etc
 
 
 @pytest.fixture(scope="function")
@@ -81,14 +81,14 @@ class TestAlertsDAO:
     def test_initialize_mongo_dao_valid(self, fake_alerts_dao):
         """Test getting a DAO with valid configuration."""
         assert isinstance(fake_alerts_dao, AlertsDAOMongo)
-    def test_add_alert_if_not_exists(self, fake_alerts_dao, fake_feedly_data):
+    def test_add_alert_if_not_duplicate(self, fake_alerts_dao, fake_feedly_data):
         """Tests adding an alert only if it does not already exist in the collection."""
         alert_data = fake_feedly_data[0]
         # Add alert for the first time
-        result_id = fake_alerts_dao.add_alert_if_not_exists(alert_data)
+        result_id = fake_alerts_dao.add_alert_if_not_duplicate(alert_data)
         assert result_id is not None
         # Try to add the same alert again
-        result_id_duplicate = fake_alerts_dao.add_alert_if_not_exists(alert_data)
+        result_id_duplicate = fake_alerts_dao.add_alert_if_not_duplicate(alert_data)
         assert result_id_duplicate is None
 
     def test_add_alerts_if_not_exist(self, fake_alerts_dao, fake_feedly_data):
@@ -103,7 +103,7 @@ class TestAlertsDAO:
     def test_delete_alert(self, fake_alerts_dao, fake_feedly_data):
         """Tests deleting an alert using pre-loaded mock data."""
         alert_data = fake_feedly_data[1]  # Use another item from the mock data
-        result_id = fake_alerts_dao.add_alert_if_not_exists(alert_data)
+        result_id = fake_alerts_dao.add_alert_if_not_duplicate(alert_data)
         delete_result = fake_alerts_dao.delete_alert(result_id)
         assert delete_result.deleted_count == 1
         assert fake_alerts_dao.get_alert(result_id) is None
@@ -111,7 +111,7 @@ class TestAlertsDAO:
     def test_get_alert(self, fake_alerts_dao, fake_feedly_data):
         """Tests retrieving a single alert using pre-loaded mock data."""
         alert_data = fake_feedly_data[0]  # Use another item from the mock data
-        result_id = fake_alerts_dao.add_alert_if_not_exists(alert_data)
+        result_id = fake_alerts_dao.add_alert_if_not_duplicate(alert_data)
         retrieved_alert = fake_alerts_dao.get_alert(result_id)
         assert retrieved_alert['_id'] == result_id
         assert retrieved_alert['title'] == alert_data['title']
@@ -120,7 +120,7 @@ class TestAlertsDAO:
         """Tests retrieving all alerts from the collection using pre-loaded mock data."""
         fake_alerts_dao.collection.delete_many({})  # Clear the collection first
         for alert in fake_feedly_data:  # Assume fake_feedly_data contains multiple alert items
-            fake_alerts_dao.add_alert_if_not_exists(alert)
+            fake_alerts_dao.add_alert_if_not_duplicate(alert)
         all_alerts = fake_alerts_dao.get_all_alerts()
         assert len(all_alerts) == len(fake_feedly_data)
         assert set(alert['title'] for alert in all_alerts) == set(item['title'] for item in fake_feedly_data)
