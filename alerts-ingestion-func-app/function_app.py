@@ -8,7 +8,7 @@ from ingestion_pipeline import run_ingestion_pipeline
 app = func.FunctionApp()
 
 @app.function_name(name="alerts_ingestion_cronjob_func")
-@app.timer_trigger(schedule="0 */5 * * * *", arg_name="ingestiontimer", run_on_startup=True, use_monitor=False) 
+@app.timer_trigger(schedule="0 */30 * * * *", arg_name="ingestiontimer", run_on_startup=True, use_monitor=False) 
 def timer_trigger_ingestion_pipeline(ingestiontimer: func.TimerRequest) -> None:
     if ingestiontimer.past_due:
         logging.info('The ingestiontimer is past due!')

@@ -8,6 +8,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from .abstract import DataFetcher
 from config_managers.secrets_manager import SecretsManager
+from models.alerts_table_document import AlertDocument, SummarizationInfo, TagsInfo
+from models.enums import AggregatorPlatform
 
 logging.basicConfig(level=logging.INFO)
 
@@ -86,14 +88,13 @@ class FeedlyDAO(DataFetcher):
         self.hours_ago = config.hours_ago
 
         self.headers: dict = {'Authorization': f'Bearer {self.access_token}'}
-        # Print first and last 2 chars of the access token for debugging purposes.
-        logging.info('Access token: %s...%s', self.access_token[:2], self.access_token[-2:])
+        logging.debug('Access token: %s...%s', self.access_token[:2], self.access_token[-2:])
 
-    def fetch_alerts(self) -> dict:
+    def fetch_alerts(self) -> list[AlertDocument]:
         """
         Fetches data from Feedly based on the initialized streams.
         Returns:
-            dict[str, str]: Parsed data fetched from Feedly.
+            list[AlertDocument]: Parsed data fetched from Feedly.
         """
         # And then call fetch_articles() to get the articles.
         logging.info('Fetching data from Feedly, from the following feeds:')
@@ -102,16 +103,15 @@ class FeedlyDAO(DataFetcher):
             logging.info('%d. %s', i, mapping['feed_name'])
         logging.info('\n')
 
-        alerts_all_streams: list[dict] = []
+        alerts_all_streams: list[AlertDocument] = []
 
         # Fetch all articles from each pre-configured stream.
         for mapping in self.feeds:
-            stream_alerts: list[dict] = self._fetch_articles_from_stream(mapping)
+            stream_alerts: list[AlertDocument] = self._fetch_articles_from_stream(mapping)
             alerts_all_streams.extend(stream_alerts)
-            logging.info('\n*After fetching all alerts from stream %s, the running total of alerts from all stream fetched is: %d*\n', mapping['feed_name'], len(alerts_all_streams))
+            logging.info('\n*After fetching all alerts from stream %s, the running total of alerts from all stream fetched is: %d*', mapping['feed_name'], len(alerts_all_streams))
 
-        logging.info('\n\n**After fetching all alerts from all streams, the final count of alerts fetched is: %d**\n\n', len(alerts_all_streams))
-
+        logging.info('\n**After fetching all alerts from all streams, the final count of alerts fetched is: %d**\n', len(alerts_all_streams))
         return alerts_all_streams
 
     def _fetch_articles_from_stream(
@@ -119,7 +119,7 @@ class FeedlyDAO(DataFetcher):
             stream_feed_mapping: dict[str, str],
             fetch_all: bool = False,
             last_timestamp: int | None = None
-        ) -> list[dict]:
+        ) -> list[AlertDocument]:
         """
         Fetch articles from a URL, optionally filtering by timestamp and handling pagination.
     
@@ -129,7 +129,7 @@ class FeedlyDAO(DataFetcher):
         - last_timestamp (int | None): Unix timestamp to fetch articles newer than this time. None to ignore.
     
         Returns:
-        - list[dict]: A list of articles, each represented as a dictionary.
+        - list[AlertDocument]: A list of articles, each represented as a dictionary.
         """
 
         
@@ -137,7 +137,7 @@ class FeedlyDAO(DataFetcher):
         stream_id: str = stream_feed_mapping['stream_id']
         stream_url: str = f'https://feedly.com/v3/streams/contents?streamId={stream_id}&count={self.article_count}'
 
-        all_articles: list[dict] = []
+        all_alert_docs: list[dict] = []
         continuation: str | None = None
 
         logging.info('Initializing fetch of articles from feed: "%s"', feed_name)
@@ -157,16 +157,48 @@ class FeedlyDAO(DataFetcher):
             response.raise_for_status()
             
             response_dict = response.json()
-            logging.info('Fetched batch of %d articles from feed: "%s"', len(response_dict.get('items', [])), feed_name)
+            raw_alerts = response_dict.get('items', [])
+            logging.info('Fetched batch of %d articles from feed: "%s"', len(raw_alerts), feed_name)
 
+            # Here is where I should parse the response_dict into AlertDocument objects.
+            alert_docs: list[AlertDocument] = [self._deserialize_raw_alert(raw_alert) for raw_alert in raw_alerts]
 
-            all_articles.extend(response_dict.get('items', []))
-            logging.info('Running total of articles fetched from feed "%s" is: %d articles', feed_name, len(all_articles))
+            all_alert_docs.extend(alert_docs)
+            logging.info('Running total of articles fetched from feed "%s" is: %d articles', feed_name, len(all_alert_docs))
             continuation = response_dict.get('continuation')
             if not fetch_all or continuation is None:
                 break
         
         logging.info('Finished fetching articles from feed "%s"', feed_name)
-        logging.info('Total number of articles fetched from feed %s is: %d articles', feed_name, len(all_articles))
+        logging.info('Total number of articles fetched from feed %s is: %d articles', feed_name, len(all_alert_docs))
 
-        return all_articles
+        return all_alert_docs
+    
+
+    def _deserialize_raw_alert(self, raw_alert: dict) -> AlertDocument:
+        """
+        Deserializes a raw alert dictionary into an AlertDocument object.
+        
+        Args:
+            raw_alert (dict): A dictionary containing raw feedly alert data.
+        
+        Returns:
+            AlertDocument: An instance of AlertDocument containing the deserialized data.
+        """
+        if raw_alert is None:
+            logging.error('Error: raw_alert from Feedly Stream is None.')
+            raise ValueError('Error: raw_alert from Feedly Stream is None.')
+        if 'originId' not in raw_alert:
+            logging.error('Error: originId not found in raw alert data.')
+            raise ValueError('Error: originId not found in raw alert data.')
+        # ToDo: Remember to generate the ID in the alerts db, and use the returned ID when successful to store the alert in the triage db.
+        aggregator_platform = AggregatorPlatform.FEEDLY
+        publication_source_url: str = raw_alert.get("canonicalUrl", raw_alert["alternate"][0]["href"]) # Error if both fields not present. # https://developers.feedly.com/reference/articlejson
+        alert_data: dict = raw_alert # Intentionally enforce no schema here.
+        publication_datetime: int = raw_alert["published"]
+        return AlertDocument(
+            aggregator_platform=aggregator_platform,
+            publication_source_url=publication_source_url,
+            publication_datetime=publication_datetime,
+            alert_data=alert_data
+        )
