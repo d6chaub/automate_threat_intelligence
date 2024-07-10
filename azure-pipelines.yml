@@ -5,29 +5,42 @@ trigger:
 
 variables:
   # Deploy to prod infra if the branch is a prod-release tag.
+  # ToDo: Discuss this strategy with Mike. Is this the best way to do it?
   ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/prod-release-') }}:
-    subscriptionId: 'PLACEHOLDER'
-    resourceGroup: 'PLACEHOLDER'
-    environment: 'prod'
+    targetDeployment: 'prod'
   # Otherwise, deploy to dev infra.
   ${{ else }}:
-    subscriptionId: 'a3c531dd-409f-4d4a-b076-0e2020958b66'
-    resourceGroup: 'Threat-Intelligence-Automation'
-    environment: 'dev'
+    targetDeployment: 'dev'
   
 
-pool:
-  vmImage: 'ubuntu-latest'
+jobs:
+  # Job 1: Run unit tests on Windows, since they require a CosmosDB emulator, which is only available on Windows.
+  # ToDo: Make everything stop if unit tests fail
+  - job: UnitTests
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - script: |
+        echo "Running unit tests on Windows"
+        # Add your commands for unit testing here
 
-# ToDo: Make this whole step conditional on whether changes have taken place in /infra (excluding .md files).
-# ToDo: Also make manual validation checks in prod before the command is used with the --deploy flag. In prod, don't want any infra changes to take place without a person's manual approval - so make the prod environment require that step (might need to create a new step with what-if etc in the pipeline, just for prod, for this approval, and take it out the main script...)
-steps:
-- script: |
-    ./infra/provision-infra.sh \
-      --subscription-id "$(subscriptionId)" \
-      --resource-group "$(resourceGroup)" \
-      --target-deployment-environment "$(environment)"
-  displayName: 'Provision Infrastructure'
+  # Job 2: Apply configurations to infra using bicep. Most of infra already provisioned through the base platform.
+  - job: ProvisionCustomInfra
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - script: |
+        echo "Applying configurations to infra using bicep"
+        # Add your commands for applying configurations here
 
-# Next steps:
-# - Deploy the actual code and applications.
+  # Job 3: Deploy to correct environment, calculated in the variables section.
+  - job: Deployment
+    dependsOn:
+    - UnitTests
+    - ProvisionCustomInfra
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - script: |
+        echo "Deployment steps on Linux"
+        # Add your commands for deployment here

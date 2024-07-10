@@ -1,0 +1,2 @@
+- Make better formatting conventions. Do the longer python line length and stick to that.
+-     # ToDo: Update the unit tests to reflect new structure of processing and data. Will need to update the mock data as well as now the data in the database is more embedded... not just flat feedly data like it was before..

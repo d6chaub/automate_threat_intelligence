@@ -6,6 +6,7 @@ python/article_data.csv
 venv
 config.ini
 .coverage
+tmp
 
 # Cache Folders.
 __pycache__/
