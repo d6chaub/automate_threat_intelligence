@@ -93,5 +93,5 @@ git push origin prod-release-YYYYMMDD
 This triggers the CI/CD pipeline for a controlled deployment to production.
 
 
-# As part of the deployment to azure functions, I need to append to the sys.path for imports,
-# and I also need to run poetry to generate the requirements.txt
+# As part of the deployment to azure functions, you need to append to the sys.path for imports,
+# and you may also need to run poetry to generate the requirements.txt
